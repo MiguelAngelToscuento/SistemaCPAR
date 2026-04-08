@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inicio - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <style>
+        .cover-container {
+            max-width: 42em;
+        }
+
+        /* =========================================
+           NUEVO CSS: Para la franja vino y sus letras
+           ========================================= */
+        .franja-vino {
+            background-color: #6a1b31;
+            /* Color vino/guinda */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Pequeña sombra elegante abajo */
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 42em;
+            /* Para que se alinee perfectamente con el texto de abajo */
+            margin: 0 auto;
+            /* Centra el contenido dentro de la franja */
+        }
+
+        .header-content nav {
+            gap: 1.5rem;
+        }
+
+        /* Enlaces blancos dentro de la franja */
+        .header-content nav a {
+            color: rgba(255, 255, 255, 0.7) !important;
+            /* Blanco un poco opaco */
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-bottom-color 0.2s;
+        }
+
+        /* Enlaces al pasar el mouse o al estar activos */
+        .header-content nav a:hover,
+        .header-content nav a.active {
+            color: #ffffff !important;
+            /* Blanco sólido y brillante */
+            border-bottom: 2px solid #ffffff;
+        }
+        .btn-vino {
+    background-color: #6a1b31; /* Fondo color vino */
+    border: 2px solid #6a1b31; /* Borde color vino */
+    color: white;              /* Letras blancas */
+    transition: all 0.3s;      /* Efecto suave */
+}
+
+.btn-vino:hover {
+    background-color: white;   /* Al pasar el mouse, fondo blanco */
+    color: #6a1b31;            /* Letras color vino */
+    border: 2px solid #6a1b31; /* El borde se queda vino */
+}
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100 text-center text-bg-light">
+
+<header class="franja-vino text-white p-3 w-100">
+    <div class="header-content">
+        <h5 class="mb-0">Sistema de Control de Pagos de Agua y Registros</h5>
+        <nav class="nav justify-content-center">
+
+            <a class="nav-link fw-bold py-1 px-0" href="administrador/nuevo">Registrar</a>
+          <!--  <a class="nav-link fw-bold py-1 px-0" href="administrador">Contact</a>-->
+        </nav>
+    </div>
+</header>
+
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<div class="logoPresidencia">
+    <img th:src="@{/LOGO.png}" width="300" height="300">
+</div>
+    <main class="px-3 my-auto">
+        <h3>Presidencia de Comunidad de Santa María Texcalac</h3>
+        <p class="lead">Eslogan de la presidencia.</p>
+        <p class="lead">
+            <a href="administrador/nuevo" class="btn btn-lg fw-bold btn-vino">Registrar administrador</a>
+        </p>
+    </main>
+
+    <footer class="mt-auto text-black-50">
+       <!-- <p>Cover template for <a href="https://getbootstrap.com/" class="text-dark fw-bold">Bootstrap</a>, by <a
+                href="https://x.com/mdo" class="text-dark fw-bold">@mdo</a>.</p>
+                -->
+    </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

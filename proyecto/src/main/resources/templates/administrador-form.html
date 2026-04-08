@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de Administradores - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f4f6f8; /* Fondo claro para resaltar la caja */
+        }
+
+        /* =========================================
+           ESTILOS DE CABECERA (Franja Vino)
+           ========================================= */
+        .franja-vino {
+            background-color: #6a1b31; /* Color vino institucional */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            /* AQUÍ ESTÁ LA SOLUCIÓN: 42em mantiene todo centrado igual que en el index */
+            max-width: 42em;
+            margin: 0 auto;
+        }
+
+        /* Enlaces de Iniciar Sesión en la cabecera */
+        .header-content a.iniciar-sesion {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.2s;
+        }
+        .header-content a.iniciar-sesion:hover {
+            color: #ffffff;
+        }
+
+        /* =========================================
+           ESTILOS DE BOTÓN VINO
+           ========================================= */
+        .btn-vino {
+            background-color: #6a1b31;
+            border: 2px solid #6a1b31;
+            color: white;
+            transition: all 0.3s;
+            padding: 10px 50px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .btn-vino:hover {
+            background-color: white;
+            color: #6a1b31;
+            border: 2px solid #6a1b31;
+        }
+
+        /* =========================================
+           ESTILOS DE LA CAJA DEL FORMULARIO
+           ========================================= */
+        .caja-registro {
+            background-color: #6a1b31; /* Mismo color vino de la cabecera */
+            color: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .lista-requisitos {
+            font-size: 0.9rem;
+            padding-left: 1.2rem;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100 text-bg-light">
+
+<header class="franja-vino text-white p-3 w-100">
+    <div class="header-content">
+        <h5 class="mb-0">Sistema de Control de Pagos de Agua y Registros</h5>
+        <div class="text-end lh-sm">
+            <span class="d-block fw-bold" style="font-size: 0.85rem;">¿Ya tienes cuenta?</span>
+            <a href="administrador/login" class="iniciar-sesion fw-bold text-decoration-underline" style="font-size: 0.85rem;">Iniciar Sesión</a>
+        </div>
+    </div>
+</header>
+
+<main class="container d-flex flex-column align-items-center mt-5 mb-5 flex-grow-1">
+
+    <form th:action="@{/administrador}" th:object="${administrador}" method="post" style="max-width: 500px; width: 100%;">
+
+        <div class="caja-registro mb-4">
+            <h1 class="fw-bold mb-4">Registro</h1>
+
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Introduce tu nombre" required>
+
+            <label for="correo" class="form-label">Dirección de correo electrónico</label>
+            <input type="email" th:field="*{correo}" class="form-control" id="correo" placeholder="Introduce tu dirección de correo electrónico" required>
+
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Introduce la contraseña" required>
+            <ul class="lista-requisitos">
+                <li>8 caracteres como mínimo</li>
+                <li>Incluir letras mayúsculas y minúsculas</li>
+                <li>Contener al menos un número</li>
+                <li>Contener un símbolo especial (por ejemplo: !@#$)</li>
+            </ul>
+        </div>
+
+        <div class="text-center">
+            <button class="btn-vino shadow fw-bold" type="submit">Registrar</button>
+            <br>
+            <a class="d-inline-block mt-3 text-muted text-decoration-none fw-bold" th:href="@{/}">Cancelar</a>
+        </div>
+
+    </form>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

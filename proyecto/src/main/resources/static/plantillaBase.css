@@ -1,0 +1,50 @@
+
+        /* =========================================
+           ESTILOS INSTITUCIONALES (TEXCALAC)
+           ========================================= */
+
+        /* 1. Franja Superior */
+        .franja-vino {
+            background-color: #6a1b31; /* Color vino/guinda */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px; /* Ancho máximo para pantallas grandes */
+            margin: 0 auto;
+        }
+
+        .header-content nav {
+            gap: 1.5rem;
+        }
+
+        .header-content nav a {
+            color: rgba(255, 255, 255, 0.7) !important;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-bottom-color 0.2s;
+        }
+
+        .header-content nav a:hover,
+        .header-content nav a.active {
+            color: #ffffff !important;
+            border-bottom: 2px solid #ffffff;
+        }
+
+        /* 2. Botones Institucionales */
+        .btn-vino {
+            background-color: #6a1b31;
+            border: 2px solid #6a1b31;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .btn-vino:hover {
+            background-color: white;
+            color: #6a1b31;
+            border: 2px solid #6a1b31;
+        }
