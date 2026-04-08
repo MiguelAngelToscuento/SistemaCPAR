@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Administradores</title>
+</head>
+<body>
+
+<div>Página de Administración</div>
+<h2>Listado de administradores</h2>
+
+<br><br>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Activo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="admin : ${administrador}">
+        <td th:text="${admin.id}"></td>
+        <td th:text="${admin.nombre}"></td>
+        <td th:text="${admin.correo}"></td>
+        <td th:text="${admin.activo}"></td>
+        <td>
+            <a th:href="@{/administrador/editar/{id}(id=${admin.id})}">Editar</a> |
+            <a th:href="@{/administrador/eliminar/{id}(id=${admin.id})}">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<a href="/administrador/nuevo">Nuevo administrador</a>
+
+</body>
+</html>

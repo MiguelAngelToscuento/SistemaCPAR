@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar Sesión - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f4f6f8;
+        }
+
+        /* =========================================
+           ESTILOS INSTITUCIONALES
+           ========================================= */
+        .franja-vino {
+            background-color: #6a1b31;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 42em;
+            margin: 0 auto;
+        }
+
+        .caja-login {
+            background-color: #6a1b31;
+            color: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-vino {
+            background-color: #6a1b31;
+            border: 2px solid #6a1b31;
+            color: white;
+            transition: all 0.3s;
+            padding: 10px 50px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .btn-vino:hover {
+            background-color: white;
+            color: #6a1b31;
+            border: 2px solid #6a1b31;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100 text-bg-light">
+
+<header class="franja-vino text-white p-3 w-100">
+    <div class="header-content">
+        <h5 class="mb-0 fw-bold">S.C.P.A.R - Texcalac</h5>
+        <div class="text-end lh-sm">
+            <span class="d-block fw-bold" style="font-size: 0.85rem;">¿No tienes cuenta?</span>
+            <a th:href="@{/administrador/nuevo}" class="text-white fw-bold text-decoration-underline" style="font-size: 0.85rem;">Registrarse</a>
+        </div>
+    </div>
+</header>
+
+<main class="container d-flex flex-column align-items-center mt-5 mb-5 flex-grow-1">
+
+    <form th:action="@{/login}" method="post" style="max-width: 400px; width: 100%;">
+
+        <div class="caja-login mb-4 text-center">
+            <img class="mb-3" th:src="@{/LOGO.png}" alt="Logo" width="80" height="80">
+            <h2 class="fw-bold mb-4">Iniciar Sesión</h2>
+
+            <div th:if="${param.error}" class="alert alert-danger p-2 mb-3" style="font-size: 0.9rem;">
+                Correo o contraseña incorrectos.
+            </div>
+
+            <div class="text-start">
+                <label for="username" class="form-label">Correo electrónico</label>
+                <input type="email" name="username" class="form-control" id="username" placeholder="Tu correo" required autofocus>
+
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Tu contraseña" required>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="btn-vino shadow fw-bold" type="submit">Entrar al Sistema</button>
+            <br>
+            <a class="d-inline-block mt-3 text-muted text-decoration-none fw-bold" th:href="@{/}">Volver al inicio</a>
+        </div>
+
+    </form>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

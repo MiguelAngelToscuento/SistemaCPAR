@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de Administradores</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f4f6f8; /* Fondo claro para resaltar la caja */
+        }
+
+        /* Color vino muy oscuro, idéntico al de tu imagen */
+        .color-institucional {
+            background-color: #4a0d1e;
+            color: white;
+        }
+
+        /* Estilos de la caja central */
+        .caja-registro {
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ajuste de las etiquetas arriba de los inputs */
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+
+        /* Ajuste de los cuadros de texto */
+        .form-control {
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Viñetas de requisitos de contraseña */
+        .lista-requisitos {
+            font-size: 0.9rem;
+            padding-left: 1.2rem;
+            margin-bottom: 0;
+        }
+
+        /* Botón inferior separado */
+        .btn-registrar {
+            background-color: #4a0d1e;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 10px 50px;
+            border-radius: 8px;
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .btn-registrar:hover {
+            background-color: #380916;
+            color: white;
+            transform: scale(1.02); /* Pequeño efecto de zoom al pasar el mouse */
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="color-institucional py-3 px-4 d-flex justify-content-between align-items-center w-100">
+        <h5 class="mb-0 fw-bold">Sistema de Control de Pagos de Agua y Registros</h5>
+        <div class="text-end">
+            <span class="d-block fw-bold" style="font-size: 0.9rem;">¿Ya tienes cuenta?</span>
+            <a href="#" class="text-white fw-bold text-decoration-underline" style="font-size: 0.9rem;">Iniciar Sesión</a>
+        </div>
+    </header>
+
+    <main class="container d-flex flex-column align-items-center mt-5 mb-5">
+
+        <form th:action="@{/administrador}" th:object="${administrador}" method="post" style="max-width: 500px; width: 100%;">
+            
+            <div class="color-institucional caja-registro mb-4">
+                <h1 class="fw-bold mb-4">Registro</h1>
+                
+                <label for="nombre" class="form-label">Nombre completo</label>
+                <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Introduce tu nombre" required>
+
+                <label for="correo" class="form-label">Dirección de correo electrónico</label>
+                <input type="email" th:field="*{correo}" class="form-control" id="correo" placeholder="Introduce tu dirección de correo electrónico" required>
+
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Introduce la contraseña" required>
+
+                <ul class="lista-requisitos">
+                    <li>8 caracteres como mínimo</li>
+                    <li>Incluir letras mayúsculas y minúsculas</li>
+                    <li>Contener al menos un número</li>
+                    <li>Contener un símbolo especial (por ejemplo: !@#$)</li>
+                </ul>
+            </div>
+
+            <div class="text-center">
+                <button class="btn-registrar shadow" type="submit">Registrar</button>
+                <br>
+                <a class="d-inline-block mt-3 text-muted text-decoration-none" th:href="@{/administrador}">Cancelar y volver a la lista</a>
+            </div>
+
+        </form>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
