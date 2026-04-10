@@ -58,4 +58,5 @@ public class Administrador {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
+    // agregar comentarios
 }
