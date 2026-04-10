@@ -27,14 +27,10 @@ public class AdministradorController {
         return "administrador-form";
     }
 
-    @Autowired
-    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder; // Inyecta el encriptador
 
     @PostMapping
     public String guardarAdministrador(@ModelAttribute Administrador administrador){
-        // Encriptar la contraseña antes de guardar
-        String hash = passwordEncoder.encode(administrador.getPassword());
-        administrador.setPassword(hash);
+
 
         administradorService.guardarAdministrador(administrador);
         return "redirect:/"; // Regresamos al index después de registrar
