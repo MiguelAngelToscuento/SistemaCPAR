@@ -47,6 +47,11 @@ public class AdministradorController {
         return "login";
     }
 
+    @GetMapping("/menu")
+    public String mostrarMenu(){
+        return "menu";
+    }
+
     // 5. PROCESAR LOGIN (POST) - Ruta: /administrador/login
     // Esta es la parte que faltaba y que debe tener una ruta distinta al guardado
     @PostMapping("/login")
@@ -63,7 +68,7 @@ public class AdministradorController {
 
         if (admin != null) {
             session.setAttribute("usuarioLogueado", admin);
-            return "redirect:/administrador"; // Éxito: va a la lista
+            return "redirect:/administrador/menu"; // Éxito: va a la lista
         } else {
             model.addAttribute("error", "Correo o contraseña incorrectos");
             return "login"; // Falla: regresa al login con error
@@ -81,4 +86,5 @@ public class AdministradorController {
         administradorService.eliminarAdministrador(id);
         return "redirect:/administrador";
     }
+    
 }
