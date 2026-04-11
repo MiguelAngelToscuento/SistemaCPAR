@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro de Usuario - Texcalac</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+  <style>
+    body { background-color: #f4f6f8; }
+    .franja-vino { background-color: #4a0d1e; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    .caja-registro { background-color: #4a0d1e; color: white; border-radius: 8px; padding: 30px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+    .form-label { font-size: 0.9rem; margin-bottom: 0.2rem; color: rgba(255, 255, 255, 0.9); }
+    .form-control, .form-select { border-radius: 4px; border: none; padding: 0.6rem; font-size: 0.95rem; }
+    .btn-vino { background-color: #4a0d1e; color: white; border: 2px solid white; padding: 10px 40px; font-weight: bold; border-radius: 8px; transition: all 0.3s; }
+    .btn-vino:hover { background-color: white; color: #4a0d1e; border: 2px solid #4a0d1e; }
+  </style>
+</head>
+
+<body class="d-flex flex-column h-100 text-bg-light">
+
+<header class="franja-vino text-white p-3 w-100">
+  <div class="container d-flex align-items-center justify-content-center">
+    <img th:src="@{/img/LOGO.png}" alt="Logo Texcalac" height="50" class="me-3">
+    <h5 class="mb-0 fw-bold">Presidencia de Comunidad de Santa María Texcalac</h5>
+  </div>
+</header>
+
+<main class="container mt-5 mb-5 flex-grow-1">
+
+  <form th:action="@{/usuarios/guardar}" th:object="${registroDTO}" method="post" style="max-width: 800px; margin: 0 auto;">
+
+    <div class="caja-registro mb-4">
+
+      <div class="d-flex align-items-center mb-4 border-bottom border-secondary pb-2">
+        <a th:href="@{/administrador/menu}" class="text-white text-decoration-none me-3 fs-4 border border-white rounded px-2 py-0">←</a>
+        <h3 class="fw-bold mb-0">Registro de Nuevo Usuario</h3>
+      </div>
+
+      <div th:if="${mensajeError}" class="alert alert-danger p-2 mb-4 shadow-sm" role="alert">
+        <strong class="d-block">¡Atención!</strong>
+        <span th:text="${mensajeError}">Error</span>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <label for="nombres" class="form-label">Nombres</label>
+          <input type="text" th:field="*{nombres}" class="form-control" id="nombres" placeholder="Ej. Juan Carlos" required>
+        </div>
+        <div class="col-md-4">
+          <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
+          <input type="text" th:field="*{apellidoPaterno}" class="form-control" id="apellidoPaterno" placeholder="Ej. Pérez" required>
+        </div>
+        <div class="col-md-4">
+          <label for="apellidoMaterno" class="form-label">Apellido Materno</label>
+          <input type="text" th:field="*{apellidoMaterno}" class="form-control" id="apellidoMaterno" placeholder="Ej. López" required>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-8">
+          <label for="idCalle" class="form-label">Calle</label>
+          <select th:field="*{idCalle}" class="form-select" id="idCalle" required>
+            <option value="">Seleccione una calle...</option>
+            <option th:each="calle : ${listaCalles}" th:value="${calle.idCalle}" th:text="${calle.nombreCalle}"></option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="numeroCasa" class="form-label">Número (Ext/Int)</label>
+          <input type="text" th:field="*{numeroCasa}" class="form-control" id="numeroCasa" placeholder="Ej. 12-B o S/N" required>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label for="codigoPostal" class="form-label">Código Postal</label>
+          <input type="text" th:field="*{codigoPostal}" class="form-control" id="codigoPostal" placeholder="Ej. 90402" required>
+        </div>
+        <div class="col-md-4">
+          <label for="idServicio" class="form-label">Tipo de Servicio</label>
+          <select th:field="*{idServicio}" class="form-select" id="idServicio" required>
+            <option value="">Servicio...</option>
+            <option value="1">Hogar</option>
+            <option value="2">Empresarial</option>
+            <option value="3">Institucional</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="fechaRegistro" class="form-label">Fecha de Registro</label>
+          <input type="date" th:field="*{fechaRegistro}" class="form-control" id="fechaRegistro" required>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-12 bg-white rounded p-2 d-flex align-items-center">
+          <div class="form-check ms-2 mb-0">
+            <input class="form-check-input border-secondary" type="checkbox" th:field="*{descuentoInapam}" id="descuentoInapam">
+            <label class="form-check-label text-muted ms-2 fw-bold" for="descuentoInapam">
+              Aplicar Descuento (INAPAM, Jubilado, Pensionado)
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn-vino shadow" type="submit">Registrar Usuario</button>
+    </div>
+
+  </form>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
