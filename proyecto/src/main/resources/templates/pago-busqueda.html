@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Realizar Pago - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --color-vino: #430404;
+            --bg-gris: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--bg-gris);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* ENCABEZADO */
+        .header-custom {
+            background-color: var(--color-vino);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* ESTA LÍNEA CENTRA TODO EL CONTENIDO */
+            position: relative; /* Para que el logo no empuje el texto */
+            height: 80px;
+        }
+
+        .logo-white-bg {
+            background-color: white;
+            padding: 5px;
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* TARJETA DE PAGO */
+        .caja-pago {
+            background-color: var(--color-vino);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 550px;
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-top: 20px;
+        }
+
+        /* BOTÓN REGRESO DENTRO DE LA TARJETA */
+        .btn-regreso-interno {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            border: 2px solid white;
+            border-radius: 8px;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-regreso-interno:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .caja-pago h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: none;
+            padding: 10px;
+        }
+
+        /* BOTÓN PAGAR EXTERNO */
+        .btn-pagar-box {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .btn-pagar {
+            background-color: var(--color-vino);
+            color: white;
+            border: none;
+            padding: 12px 100px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .btn-pagar:hover {
+            transform: scale(1.03);
+            background-color: #5a0606;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-custom">
+    <div class="logo-white-bg" style="position: absolute; left: 20px;">
+          <img th:src="@{/LOGO.png}" width="90" height="70">
+    </div>
+
+    <h5 class="mb-0">Presidencia de Comunidad de Santa María Texcalac</h5>
+</header>
+
+<main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+    
+    <div class="caja-pago">
+        <a th:href="@{/administrador/menu}" class="btn-regreso-interno" title="Volver al menú">←</a>
+        
+        <h2>Realizar Pago</h2>
+        
+        <form th:action="@{/pagos/confirmacion}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Folio de tarjeta</label>
+                <input type="text" name="folio" class="form-control" placeholder="Introduce el folio de la tarjeta" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre del titular</label>
+                <input type="text" name="titular" class="form-control" placeholder="Introduce el nombre del titular" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Periodo de pago (Rango)</label>
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <select name="mesInicio" class="form-select" required>
+                            <option value="" disabled selected>Desde...</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <span class="fw-bold">a</span>
+                    </div>
+                    <div class="col">
+                        <select name="mesFin" class="form-select" required>
+                            <option value="" disabled selected>Hasta...</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Monto</label>
+                <input type="number" step="0.01" name="monto" class="form-control" placeholder="Introduce la cantidad de pago" required>
+            </div>
+    </div> <div class="btn-pagar-box">
+        <button type="submit" class="btn-pagar">Pagar</button>
+    </div>
+    </form>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
