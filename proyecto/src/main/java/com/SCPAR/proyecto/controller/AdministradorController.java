@@ -34,11 +34,17 @@ public class AdministradorController {
         return "administrador-form";
     }
 
-    // 3. GUARDAR REGISTRO (POST) - Ruta: /administrador
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder; // Inyecta el encriptador
+
     @PostMapping
-    public String guardarAdministrador(@ModelAttribute Administrador administrador) {
+    public String guardarAdministrador(@ModelAttribute Administrador administrador){
+        // Encriptar la contraseña antes de guardar
+        String hash = passwordEncoder.encode(administrador.getPassword());
+        administrador.setPassword(hash);
+
         administradorService.guardarAdministrador(administrador);
-        return "redirect:/administrador/login"; // Al registrar, lo mandamos a loguearse
+        return "redirect:/administrador/login"; // Regresamos al index después de registrar
     }
 
     // 4. MOSTRAR LOGIN (GET) - Ruta: /administrador/login
