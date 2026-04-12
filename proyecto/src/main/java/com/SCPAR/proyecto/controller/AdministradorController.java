@@ -48,7 +48,7 @@ public class AdministradorController {
     }
 
     @GetMapping("/menu")
-    public String mostrarMenu(){
+    public String mostrarMenu() {
         return "menu";
     }
 
@@ -86,5 +86,9 @@ public class AdministradorController {
         administradorService.eliminarAdministrador(id);
         return "redirect:/administrador";
     }
-    
+
+    @GetMapping("/pagos/nuevo")
+    public String mostrarFormularioPago() {
+        return "pago-form"; // Nombre del archivo HTML sin el .html
+    }
 }
