@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estado de Cuenta</title>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { background-color: #4a0404; color: white; width: 100%; padding: 20px; text-align: center; font-size: 1.2em; font-weight: bold; }
+        .card { background-color: #3d0303; color: white; width: 450px; padding: 30px; border-radius: 15px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .card h2 { text-align: center; border-bottom: 1px solid #631010; padding-bottom: 15px; margin-top: 0; }
+        .row { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 0.5px solid #5a0d0d; padding-bottom: 5px; }
+        .label { font-weight: bold; color: #bbb; }
+        .btn-container { margin-top: 25px; display: flex; gap: 15px; }
+        .btn-pago { background-color: #3d0303; color: white; padding: 12px 25px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">Sistema de Control de Pagos de Agua y Registros</div>
+    <div class="card" th:if="${cuenta != null}">
+        <h2>Estado de Cuenta</h2>
+        <div class="row"><span class="label">Titular:</span> <span th:text="${cuenta.nombreTitular}"></span></div>
+        <div class="row"><span class="label">Domicilio:</span> <span th:text="${cuenta.domicilioCompleto}"></span></div>
+        <div class="row"><span class="label">CP:</span> <span th:text="${cuenta.codigoPostal}"></span></div>
+        <div class="row"><span class="label">Servicio:</span> <span th:text="${cuenta.tipoServicio}"></span></div>
+        <div class="row"><span class="label">INAPAM:</span> <span th:text="${cuenta.descuentoInapamStr}"></span></div>
+        <div class="row"><span class="label">Monto Total:</span> <span style="font-weight: bold;" th:text="${'$' + cuenta.montoTotalDeuda}"></span></div>
+        <div class="row"><span class="label">Último Pago:</span> <span th:text="${cuenta.ultimaFechaPago != null ? #temporals.format(cuenta.ultimaFechaPago, 'dd/MM/yyyy') : 'Sin registros'}"></span></div>
+    </div>
+    <div class="btn-container">
+        <button class="btn-pago">Historial de Pagos</button>
+        <a href="/consultar" style="text-decoration: none;">
+            <button type="button" style="background-color: #6c757d; color: white; padding: 12px 25px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;">
+                Nueva Búsqueda
+            </button>
+        </a>
+    </div>
+    
+</body>
+</html>
