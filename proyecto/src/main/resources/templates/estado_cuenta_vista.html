@@ -23,7 +23,7 @@
         <div class="row"><span class="label">CP:</span> <span th:text="${cuenta.codigoPostal}"></span></div>
         <div class="row"><span class="label">Servicio:</span> <span th:text="${cuenta.tipoServicio}"></span></div>
         <div class="row"><span class="label">INAPAM:</span> <span th:text="${cuenta.descuentoInapamStr}"></span></div>
-        <div class="row"><span class="label">Monto Total:</span> <span style="font-weight: bold;" th:text="${'$' + cuenta.montoTotalDeuda}"></span></div>
+        <div class="row"><span class="label">Tarifa:</span> <span style="font-weight: bold;" th:text="${'$' + cuenta.montoTotalDeuda}"></span></div>
         <div class="row"><span class="label">Último Pago:</span> <span th:text="${cuenta.ultimaFechaPago != null ? #temporals.format(cuenta.ultimaFechaPago, 'dd/MM/yyyy') : 'Sin registros'}"></span></div>
     </div>
     <div class="btn-container">
