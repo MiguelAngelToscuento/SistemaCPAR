@@ -27,6 +27,7 @@
 <main class="container mt-5 mb-5 flex-grow-1">
   <form th:action="@{/usuarios/guardar}" th:object="${registroDTO}" method="post" style="max-width: 800px; margin: 0 auto;">
     <div class="caja-registro mb-4">
+      <!--este es el boton que regresa al menu-->
       <div class="d-flex align-items-center mb-4 border-bottom border-secondary pb-2">
         <a th:href="@{/administrador/menu}" class="text-white text-decoration-none me-3 fs-4 border border-white rounded px-2 py-0">←</a>
         <h3 class="fw-bold mb-0">Registro de Nuevo Usuario</h3>
