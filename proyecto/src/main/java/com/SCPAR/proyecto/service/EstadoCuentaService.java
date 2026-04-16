@@ -41,7 +41,7 @@ public class EstadoCuentaService {
             if (servicio != null) {
                 dto.setTipoServicio(servicio.getNombreServicio());
                 double tarifa = servicio.getTarifa().doubleValue();
-                int meses = 5; // Valor de ejemplo
+                int meses = 1; // Valor de ejemplo
                 dto.setMesesPendientes(meses);
                 dto.setMontoTotalDeuda(tarifa * meses);
             }
