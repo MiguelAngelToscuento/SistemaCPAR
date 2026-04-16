@@ -15,9 +15,15 @@
     </style>
 </head>
 <body>
-    <div class="header">Sistema de Control de Pagos de Agua y Registros</div>
+    <div class="header">Sistema de Control de Pagos de Agua y Registros
+        <div class="d-flex aling-items-left mb-4 border-bottom border-secondary pb-2">
+            <a th:href="@{/administrador/menu}" class="text-white text-decoration-none me-3 fs-4 border border-white rounded px-2 py-0">←</a>
+        </div>
+    </div>
+
     <div class="card" th:if="${cuenta != null}">
         <h2>Estado de Cuenta</h2>
+
         <div class="row"><span class="label">Titular:</span> <span th:text="${cuenta.nombreTitular}"></span></div>
         <div class="row"><span class="label">Domicilio:</span> <span th:text="${cuenta.domicilioCompleto}"></span></div>
         <div class="row"><span class="label">CP:</span> <span th:text="${cuenta.codigoPostal}"></span></div>

@@ -18,6 +18,9 @@
 
     <div class="search-container">
         <h2>Consulta de Estado</h2>
+        <div class="d-flex align-items-center mb-4 border-bottom border-secondary pb-2">
+            <a th:href="@{/administrador/menu}" class="text-white text-decoration-none me-3 fs-4 border border-white rounded px-2 py-0">←</a>
+        </div>
         <p>Ingresa el folio de la tarjeta para continuar</p>
         
         <form th:action="@{/buscar}" method="POST">
