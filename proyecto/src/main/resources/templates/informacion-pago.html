@@ -1,118 +1,33 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Información de Pago - Texcalac</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <style>
-        :root {
-            --color-vino: #430404;
-            --bg-gris: #f8f9fa;
-        }
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
 
-        body {
-            background-color: var(--bg-gris);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
+        .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
 
-        /* ENCABEZADO IDÉNTICO AL MENÚ */
-        .franja-vino {
-            background-color: var(--color-vino);
-            display: flex;
-            align-items: center;
-            height: 85px;
-            padding: 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+        /* Botón principal blanco */
+        .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; text-decoration: none; display: inline-block; }
+        .btn-blanco:hover { background-color: #f0f0f0; color: var(--color-vino); transform: scale(1.02); }
 
-        .logo-container {
-            background-color: white;
-            height: 100%;
-            padding: 5px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        /* Botón secundario con contorno */
+        .btn-outline-blanco { background-color: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); transition: all 0.3s; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; text-decoration: none; display: inline-block; }
+        .btn-outline-blanco:hover { background-color: rgba(255,255,255,0.1); color: white; border-color: white; transform: scale(1.02); }
 
-        .logo-container img {
-            max-height: 70px;
-        }
-
-        .header-title {
-            color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-left: 30px;
-            margin-bottom: 0;
-        }
-
-        /* CAJA DE INFORMACIÓN (ESTILO IMAGEN) */
-        .caja-informacion {
-            background-color: var(--color-vino);
-            color: white;
-            border-radius: 15px;
-            padding: 45px;
-            width: 100%;
-            max-width: 580px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: 50px;
-            margin-bottom: 30px;
-        }
-
-        .caja-informacion h2 {
-            text-align: center;
-            font-weight: normal;
-            font-size: 2.2rem;
-            margin-bottom: 35px;
-        }
-
-        .caja-informacion p {
-            font-size: 1.25rem;
-            margin-bottom: 18px;
-            font-weight: 300;
-        }
-
-        /* BOTONES */
-        .btn-regresar {
-            background-color: var(--color-vino);
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            text-decoration: none;
-            transition: 0.3s;
-            display: inline-block;
-        }
-
-        .btn-regresar:hover {
-            background-color: #2e0202;
-            color: white;
-        }
-
-        .btn-generar {
-            background-color: white;
-            color: black;
-            border: 2px solid var(--color-vino);
-            padding: 12px 35px;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        .btn-generar:hover {
-            background-color: var(--color-vino);
-            color: white;
-        }
+        .fila-info { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; font-size: 1.1rem; }
+        .label-gris { color: rgba(255,255,255,0.7); font-weight: bold; }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
 <header class="franja-vino w-100">
     <div class="logo-container">
@@ -121,31 +36,33 @@
     <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
 </header>
 
-<main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+<main class="container d-flex flex-column align-items-center justify-content-center flex-grow-1 my-5">
+    <div class="caja-oscura" style="max-width: 600px; width: 100%;">
+        <h2 class="fw-bold mb-4 text-center border-bottom pb-3">Resumen de Pago</h2>
 
-    <div class="caja-informacion">
-        <h2>Informacion de Pago</h2>
-        
-        <p>Folio de Tarjeta: <span th:text="${cuenta.folioTarjeta}"></span></p>
-        <p>Nombre del Titular: <span th:text="${cuenta.nombres + ' ' + cuenta.apellidoPaterno + ' ' + cuenta.apellidoMaterno}"></span></p>
-        <p>Periodo: <span th:text="${pago.periodo}"></span></p>
-        <p>Monto Total: $<span th:text="${pago.montoTotal}"></span></p>
-        <p>Descuento INAPAM: <span th:text="${cuenta.descuentoInapam ? 'Si' : 'No'}"></span></p>
-    </div>
+        <div class="fila-info"><span class="label-gris">Folio de Tarjeta:</span> <span class="text-end fw-bold" th:text="${cuenta.folioTarjeta}"></span></div>
+        <div class="fila-info"><span class="label-gris">Titular:</span> <span class="text-end" th:text="${cuenta.nombres + ' ' + cuenta.apellidoPaterno + ' ' + cuenta.apellidoMaterno}"></span></div>
+        <div class="fila-info"><span class="label-gris">Periodo a pagar:</span> <span class="text-end" th:text="${pago.periodo}"></span></div>
+        <div class="fila-info"><span class="label-gris">Descuento INAPAM:</span> <span class="text-end" th:text="${cuenta.descuentoInapam ? 'Sí (Aplicado)' : 'No'}"></span></div>
 
-    <form th:action="@{/pagos/guardar}" method="post">
-        <input type="hidden" name="folio" th:value="${cuenta.folioTarjeta}">
-        <input type="hidden" name="monto" th:value="${pago.montoTotal}">
-        <input type="hidden" name="periodo" th:value="${pago.periodo}">
-
-        <div class="d-flex justify-content-center gap-4 mb-5">
-            <a th:href="@{/administrador/menu}" class="btn-regresar">Regresar al Inicio</a>
-            <button type="submit" class="btn-generar">Generar Recibo</button>
+        <div class="fila-info border-0 mt-4 align-items-center">
+            <span class="label-gris fs-4 text-white">Monto Total:</span>
+            <span class="fs-2 fw-bold text-warning" th:text="${'$' + pago.montoTotal}"></span>
         </div>
-    </form>
 
+        <form th:action="@{/pagos/guardar}" method="post" class="mt-5">
+            <input type="hidden" name="folio" th:value="${cuenta.folioTarjeta}">
+            <input type="hidden" name="monto" th:value="${pago.montoTotal}">
+            <input type="hidden" name="periodo" th:value="${pago.periodo}">
+
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                <a th:href="@{/administrador/menu}" class="btn-outline-blanco text-center w-100">Cancelar y Regresar</a>
+                <button type="submit" class="btn-blanco w-100 border-0 shadow-sm">Generar Recibo</button>
+            </div>
+        </form>
+    </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
