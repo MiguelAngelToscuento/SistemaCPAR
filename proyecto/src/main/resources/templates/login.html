@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="h-100">
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
@@ -12,9 +12,6 @@
             background-color: #f4f6f8;
         }
 
-        /* =========================================
-           ESTILOS INSTITUCIONALES
-           ========================================= */
         .franja-vino {
             background-color: #6a1b31;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -85,28 +82,34 @@
 
         <div class="caja-login mb-4 text-center">
             <div class="logoPresidencia">
-                <img th:src="@{/LOGO.png}" width="80" height="80">
+                <img th:src="@{/img/LOGO.png}" width="80" height="80" alt="Logo">
             </div>
             <h2 class="fw-bold mb-4">Iniciar Sesión</h2>
-        <div th:if="${error}" class="alert alert-danger p-2 mb-3 text-center" 
-            style="font-size: 0.9rem; border-radius: 8px; border: none; background-color: #f8d7da; color: #842029;">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <span th:text="${error}">aquí aparecerá el mensaje</span>
-        </div>
+
+            <div th:if="${mensajeExito}" class="alert alert-success p-2 mb-3 text-center"
+                 style="font-size: 0.9rem; border-radius: 8px; border: none; background-color: #d4edda; color: #155724;">
+                <span th:text="${mensajeExito}">aquí aparecerá el éxito</span>
+            </div>
+
+            <div th:if="${param.error}" class="alert alert-danger p-2 mb-3 text-center"
+                 style="font-size: 0.9rem; border-radius: 8px; border: none; background-color: #f8d7da; color: #842029;">
+                <span>Correo o contraseña incorrectos. Verifica tus datos.</span>
+            </div>
+
             <div class="text-start">
                 <label for="username" class="form-label">Correo electrónico</label>
-                <input type="email" name="username" class="form-control" id="username" placeholder="Tu correo" required autofocus>
+                <input type="email" name="username" class="form-control" id="username" placeholder="Tu correo" required autofocus
+                       pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                       title="Por favor, ingresa un formato de correo válido (ejemplo: admin@texcalac.com)">
 
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" name="password" class="form-control" id="password" placeholder="Tu contraseña" required>
             </div>
-        </div>
-
-        <div class="text-center">
-            <button class="btn-vino shadow fw-bold" type="submit">Entrar al Sistema</button>
-            <br>
-            <a class="d-inline-block mt-3 text-muted text-decoration-none fw-bold" th:href="@{/}">Volver al inicio</a>
-        </div>
+        </div> <div class="text-center">
+        <button class="btn-vino shadow fw-bold" type="submit">Entrar al Sistema</button>
+        <br>
+        <a class="d-inline-block mt-3 text-muted text-decoration-none fw-bold" th:href="@{/}">Volver al inicio</a>
+    </div>
 
     </form>
 
@@ -114,5 +117,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

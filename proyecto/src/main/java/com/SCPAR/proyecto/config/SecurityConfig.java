@@ -15,7 +15,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         // 1. Pantallas públicas (Cualquiera puede entrar sin iniciar sesión)
-                        .requestMatchers("/", "/administrador/nuevo", "/administrador", "/css/**", "/img/**").permitAll()
+                        .requestMatchers("/", "/administrador/nuevo", "/administrador", "/css/**", "/img/**", "/static").permitAll()
                         // 2. Cualquier otra pantalla estará bloqueada y pedirá login
                         .anyRequest().authenticated()
                 )
@@ -25,7 +25,7 @@ public class SecurityConfig {
                         // 4. Le decimos a Spring que él atrape los datos cuando des clic en "Entrar"
                         .loginProcessingUrl("/administrador/login")
                         // 5. A dónde te manda si la contraseña es correcta
-                        .defaultSuccessUrl("/administrador/menu", true)
+                        .defaultSuccessUrl("/administrador/menu?login=exito", true)
                         .permitAll()
                 )
                 .logout(logout -> logout

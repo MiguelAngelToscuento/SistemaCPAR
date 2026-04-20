@@ -29,7 +29,16 @@ public class AdministradorController {
 
     // 2. MOSTRAR FORMULARIO DE REGISTRO (GET)
     @GetMapping("/nuevo")
-    public String mostrarFormularioNuevaPersona(Model model) {
+    public String mostrarFormularioNuevaPersona(Model model, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
+        // REGLA DE NEGOCIO: Verificar si ya existe un administrador
+        // Si la lista de administradores NO está vacía, significa que ya hay uno.
+        if (!administradorService.listarTodas().isEmpty()) {
+            // Mandamos el mensaje de error rojo a la pantalla de login
+            redirectAttributes.addFlashAttribute("error", "El cupo está lleno. Ya existe un administrador registrado para este periodo.");
+            return "redirect:/administrador/login";
+        }
+
         model.addAttribute("administrador", new Administrador());
         return "administrador-form";
     }
@@ -38,13 +47,39 @@ public class AdministradorController {
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder; // Inyecta el encriptador
 
     @PostMapping
-    public String guardarAdministrador(@ModelAttribute Administrador administrador){
-        // Encriptar la contraseña antes de guardar
+    public String guardarAdministrador(@ModelAttribute Administrador administrador, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes){
+
+        // 1. Verificamos que no haya cupo lleno
+        if (!administradorService.listarTodas().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Operación bloqueada: Ya existe un administrador registrado.");
+            return "redirect:/administrador/login";
+        }
+
+        // 2. VALIDACIÓN DE CORREO: Revisamos que tenga formato texto@texto.com
+        String regexCorreo = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if (administrador.getCorreo() == null || !administrador.getCorreo().matches(regexCorreo)) {
+            redirectAttributes.addFlashAttribute("error", "El correo ingresado no es válido. Verifica que esté bien escrito (ejemplo: admin@gmail.com).");
+            return "redirect:/administrador/nuevo";
+        }
+
+        // 3. VALIDACIÓN DE CONTRASEÑA: Revisamos los 4 requisitos
+        String regexPassword = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$";
+        if (administrador.getPassword() == null || !administrador.getPassword().matches(regexPassword)) {
+            redirectAttributes.addFlashAttribute("error", "La contraseña es débil. Asegúrate de cumplir con los 4 requisitos que se muestran en la pantalla.");
+            return "redirect:/administrador/nuevo";
+        }
+
+        // 4. Si pasa todas las pruebas, Encriptamos y guardamos
         String hash = passwordEncoder.encode(administrador.getPassword());
         administrador.setPassword(hash);
+        administrador.setActivo(true);
 
         administradorService.guardarAdministrador(administrador);
-        return "redirect:/administrador/login"; // Regresamos al index después de registrar
+
+        redirectAttributes.addFlashAttribute("mensajeExito", "¡Administrador registrado correctamente!");
+
+        // CAMBIA ESTA LÍNEA PARA QUE VAYA AL LOGIN
+        return "redirect:/administrador/login";
     }
 
     // 4. MOSTRAR LOGIN (GET) - Ruta: /administrador/login
@@ -54,7 +89,13 @@ public class AdministradorController {
     }
 
     @GetMapping("/menu")
-    public String mostrarMenu() {
+    public String mostrarMenu(@RequestParam(value = "login", required = false) String loginEstatus, Model model) {
+
+        // Si la URL trae "?login=exito", mandamos el mensaje a la vista
+        if ("exito".equals(loginEstatus)) {
+            model.addAttribute("mensajeExito", "¡Sesión iniciada correctamente! Bienvenido(a) al menú.");
+        }
+
         return "menu";
     }
 
