@@ -6,176 +6,78 @@
     <title>Realizar Pago - Texcalac</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        :root {
-            --color-vino: #430404;
-            --bg-gris: #f8f9fa;
-        }
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; margin: 0; }
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
 
-        body {
-            background-color: var(--bg-gris);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-        }
+        .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
+        .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
+        .btn-back:hover { color: white; transform: scale(1.1); }
+        .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 10px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; }
+        .btn-blanco:hover { background-color: #f0f0f0; transform: scale(1.02); }
 
-        /* ENCABEZADO */
-        .header-custom {
-            background-color: var(--color-vino);
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            height: 80px;
-        }
-
-        .logo-white-bg {
-            background-color: white;
-            padding: 5px;
-            border-radius: 4px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        /* TARJETA DE PAGO */
-        .caja-pago {
-            background-color: var(--color-vino);
-            color: white;
-            border-radius: 20px;
-            padding: 30px 40px;
-            width: 100%;
-            max-width: 600px; 
-            position: relative; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            margin-top: 20px;
-        }
-
-        .btn-regreso-interno {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            text-decoration: none;
-            border: 2px solid white;
-            border-radius: 8px;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-regreso-interno:hover {
-            background-color: rgba(255,255,255,0.2);
-            color: white;
-        }
-
-        .caja-pago h2 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-        }
-
-        .form-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-
-        .form-control, .form-select, .input-group-text {
-            border-radius: 10px;
-            border: none;
-            padding: 8px 12px;
-        }
-
-        .input-group-text {
-            background-color: #e9ecef;
-            font-weight: bold;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        
-        .input-monto {
-            border-top-left-radius: 0 !important;
-            border-bottom-left-radius: 0 !important;
-        }
-
-        .btn-pagar-box {
-            margin-top: 25px;
-            text-align: center;
-        }
-
-        .btn-pagar {
-            background-color: var(--color-vino);
-            color: white;
-            border: none;
-            padding: 12px 100px;
-            border-radius: 12px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-
-        .btn-pagar:hover {
-            transform: scale(1.03);
-            background-color: #5a0606;
-        }
-
-        .rango-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-        }
+        .rango-container { background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 1rem; }
+        .info-usuario { background-color: rgba(255,255,255,0.9); color: var(--color-vino); padding: 15px; border-radius: 8px; font-size: 0.95rem; display: none; }
+        .badge-inapam { background-color: #198754; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 10px; }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
-<header class="header-custom">
-    <div class="logo-white-bg" style="position: absolute; left: 20px;">
-        <img th:src="@{/LOGO.png}" width="90" height="70">
+<header class="franja-vino w-100">
+    <div class="logo-container">
+        <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
     </div>
-    <h5 class="mb-0">Presidencia de Comunidad de Santa María Texcalac</h5>
+    <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
 </header>
 
-<main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    
-    <form th:action="@{/pagos/confirmacion}" method="post" style="width: 100%; max-width: 600px;">
-        
-        <div class="caja-pago mx-auto">
-            <a th:href="@{/administrador/menu}" class="btn-regreso-interno" title="Volver al menú">←</a>
-            
-            <h2>Realizar Pago</h2>
-            
+<main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center my-4">
+    <form id="formularioPago" th:action="@{/pagos/guardar-final}" method="post" style="width: 100%; max-width: 600px;">
+        <div class="caja-oscura mx-auto">
+            <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
+            <h2 class="fw-bold mb-4 text-center border-bottom pb-2">Realizar Cobro</h2>
+
+            <div id="alertaError" class="alert alert-danger p-2 text-center" style="display: none; font-size: 0.9rem;">Folio no encontrado.</div>
+
             <div class="mb-3">
-                <label class="form-label">Folio de tarjeta</label>
-                <input type="text" name="folio" class="form-control" placeholder="Introduce el folio de la tarjeta" required>
+                <label class="form-label fw-bold">Folio de tarjeta (Enter para buscar)</label>
+                <div class="input-group">
+                    <input type="number" name="folio" id="inputFolio" class="form-control" placeholder="Introduce el folio" required>
+                    <button type="button" class="btn btn-light fw-bold" onclick="buscarDatosCuenta()">Buscar</button>
+                </div>
             </div>
 
-            <div class="rango-container">
-                <label class="form-label d-block text-center mb-3">Periodo de pago (Rango)</label>
-                
+            <div id="cajaInfoUsuario" class="info-usuario mb-3 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 border-danger">
+                    <strong class="fs-5" id="txtNombre">---</strong>
+                    <span id="badgeInapam" class="badge-inapam" style="display: none;">INAPAM (20%)</span>
+                </div>
+                <div class="row text-center fw-bold">
+                    <div class="col">Servicio: <br><span class="fw-normal text-dark" id="txtServicio">---</span></div>
+                    <div class="col border-start border-danger">Tarifa Base: <br><span class="fw-normal text-dark" id="txtTarifa">$0.00</span></div>
+                </div>
+                <input type="hidden" id="hiddenTarifaBase" value="0">
+                <input type="hidden" id="hiddenTieneInapam" value="false">
+            </div>
+
+            <div class="rango-container" id="cajaPeriodo" style="opacity: 0.5; pointer-events: none;">
+                <label class="form-label d-block text-center mb-3 fw-bold">Periodo de pago (Rango)</label>
+
                 <div class="row g-2 align-items-center mb-2">
                     <div class="col-7">
-                        <select name="mesInicio" class="form-select" required>
-                            <option value="" disabled selected>Mes inicio</option>
-                            <option value="Enero">Enero</option><option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option><option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option><option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option><option value="Agosto">Agosto</option>
-                            <option value="Septiembre">Septiembre</option><option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option><option value="Diciembre">Diciembre</option>
+                        <select id="mesInicio" class="form-select calcular-trigger" required>
+                            <option value="1">Enero</option><option value="2">Febrero</option>
+                            <option value="3">Marzo</option><option value="4">Abril</option>
+                            <option value="5">Mayo</option><option value="6">Junio</option>
+                            <option value="7">Julio</option><option value="8">Agosto</option>
+                            <option value="9">Septiembre</option><option value="10">Octubre</option>
+                            <option value="11">Noviembre</option><option value="12">Diciembre</option>
                         </select>
                     </div>
                     <div class="col-5">
-                        <select name="anioInicio" class="form-select select-anio" required></select>
+                        <select id="anioInicio" class="form-select select-anio calcular-trigger" required></select>
                     </div>
                 </div>
 
@@ -183,54 +85,53 @@
 
                 <div class="row g-2 align-items-center">
                     <div class="col-7">
-                        <select name="mesFin" class="form-select" required>
-                            <option value="" disabled selected>Mes fin</option>
-                            <option value="Enero">Enero</option><option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option><option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option><option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option><option value="Agosto">Agosto</option>
-                            <option value="Septiembre">Septiembre</option><option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option><option value="Diciembre">Diciembre</option>
+                        <select id="mesFin" class="form-select calcular-trigger" required>
+                            <option value="1">Enero</option><option value="2">Febrero</option>
+                            <option value="3">Marzo</option><option value="4">Abril</option>
+                            <option value="5">Mayo</option><option value="6">Junio</option>
+                            <option value="7">Julio</option><option value="8">Agosto</option>
+                            <option value="9">Septiembre</option><option value="10">Octubre</option>
+                            <option value="11">Noviembre</option><option value="12">Diciembre</option>
                         </select>
                     </div>
                     <div class="col-5">
-                        <select name="anioFin" class="form-select select-anio" required></select>
+                        <select id="anioFin" class="form-select select-anio calcular-trigger" required></select>
                     </div>
                 </div>
+
+                <div id="errorFechas" class="text-warning text-center mt-2 fw-bold" style="display:none; font-size: 0.85rem;">
+                    La fecha final debe ser igual o posterior a la fecha de inicio.
+                </div>
+
+                <input type="hidden" name="cantidadMeses" id="inputMesesInvisible" value="1">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Monto</label>
+                <label class="form-label fw-bold">Monto</label>
                 <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" 
-                        name="monto" 
-                        id="monto"
-                        class="form-control input-monto" 
-                        placeholder="0.00" 
-                        min="0" 
-                        step="0.01" 
-                        required>
+                    <span class="input-group-text bg-white text-dark fw-bold fs-5">$</span>
+                    <input type="text" name="monto" id="inputTotal" class="form-control bg-white text-dark fw-bold fs-5" value="0.00" readonly>
                 </div>
             </div>
-        </div> 
 
-        <div class="btn-pagar-box">
-            <button type="submit" class="btn-pagar">Pagar</button>
+            <div class="mt-4 text-center">
+                <button type="submit" id="btnCobrar" class="btn-blanco w-100" disabled>Registrar Pago Oficial</button>
+            </div>
         </div>
     </form>
-
 </main>
 
 <script>
-    const llenarAnios = () => {
+    // 1. INICIALIZAR AÑOS Y MES ACTUAL
+    const inicializarFechas = () => {
         const selects = document.querySelectorAll('.select-anio');
-        const anioActual = new Date().getFullYear();
-        const inicio = anioActual - 15;
-        const fin = anioActual + 10;
+        const fechaActual = new Date();
+        const anioActual = fechaActual.getFullYear();
+        const mesActual = fechaActual.getMonth() + 1;
 
+        // Llenar los años
         selects.forEach(select => {
-            for (let i = inicio; i <= fin; i++) {
+            for (let i = anioActual - 5; i <= anioActual + 5; i++) {
                 let opcion = document.createElement('option');
                 opcion.value = i;
                 opcion.text = i;
@@ -238,25 +139,100 @@
                 select.appendChild(opcion);
             }
         });
+
+        // Setear el mes actual en los selectores
+        document.getElementById('mesInicio').value = mesActual;
+        document.getElementById('mesFin').value = mesActual;
+
+        // Escuchar cambios en cualquier select para recalcular automático
+        document.querySelectorAll('.calcular-trigger').forEach(el => {
+            el.addEventListener('change', calcularTotalRango);
+        });
+    };
+
+    // 2. BUSCAR DATOS (API JAVA)
+    function buscarDatosCuenta() {
+        const folio = document.getElementById('inputFolio').value;
+        if(!folio) return;
+
+        fetch(`/pagos/api/buscar-cuenta?folio=${folio}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Folio no existe');
+                return response.json();
+            })
+            .then(datos => {
+                document.getElementById('alertaError').style.display = 'none';
+                document.getElementById('cajaInfoUsuario').style.display = 'block';
+
+                document.getElementById('txtNombre').textContent = datos.nombreCompleto;
+                document.getElementById('txtServicio').textContent = datos.tipoServicio;
+                document.getElementById('txtTarifa').textContent = `$${datos.tarifaBase.toFixed(2)}`;
+
+                const badge = document.getElementById('badgeInapam');
+                badge.style.display = datos.tieneInapam ? 'inline-block' : 'none';
+
+                document.getElementById('hiddenTarifaBase').value = datos.tarifaBase;
+                document.getElementById('hiddenTieneInapam').value = datos.tieneInapam;
+
+                document.getElementById('cajaPeriodo').style.opacity = '1';
+                document.getElementById('cajaPeriodo').style.pointerEvents = 'auto';
+
+                calcularTotalRango();
+            })
+            .catch(error => {
+                document.getElementById('alertaError').style.display = 'block';
+                document.getElementById('cajaInfoUsuario').style.display = 'none';
+                document.getElementById('cajaPeriodo').style.opacity = '0.5';
+                document.getElementById('cajaPeriodo').style.pointerEvents = 'none';
+                document.getElementById('btnCobrar').disabled = true;
+                document.getElementById('inputTotal').value = '0.00';
+            });
     }
 
-    const montoInput = document.getElementById('monto');
-    montoInput.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            let val = parseFloat(montoInput.value) || 0;
-            montoInput.value = (val + 10).toFixed(2);
-        }
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            let val = parseFloat(montoInput.value) || 0;
-            if (val >= 10) montoInput.value = (val - 10).toFixed(2);
-        }
-    });
+    // 3. CALCULAR CON BASE EN RANGO DE FECHAS
+    function calcularTotalRango() {
+        const tarifaBase = parseFloat(document.getElementById('hiddenTarifaBase').value) || 0;
+        const tieneInapam = document.getElementById('hiddenTieneInapam').value === 'true';
 
-    window.onload = llenarAnios;
+        // Obtenemos números de fechas
+        const mInicio = parseInt(document.getElementById('mesInicio').value);
+        const aInicio = parseInt(document.getElementById('anioInicio').value);
+        const mFin = parseInt(document.getElementById('mesFin').value);
+        const aFin = parseInt(document.getElementById('anioFin').value);
+
+        // Fórmula mágica para saber cuántos meses hay entre dos fechas
+        const cantidadMeses = ((aFin - aInicio) * 12) + (mFin - mInicio) + 1;
+
+        const btnCobrar = document.getElementById('btnCobrar');
+        const errorFechas = document.getElementById('errorFechas');
+        const inputInvisible = document.getElementById('inputMesesInvisible');
+
+        // Validar si pusieron fechas al revés
+        if (cantidadMeses <= 0) {
+            errorFechas.style.display = 'block';
+            btnCobrar.disabled = true;
+            document.getElementById('inputTotal').value = '0.00';
+            inputInvisible.value = 0;
+            return;
+        }
+
+        // Si el rango es correcto
+        errorFechas.style.display = 'none';
+        btnCobrar.disabled = false;
+        inputInvisible.value = cantidadMeses; // Se lo pasamos a Java
+
+        // Calcular dinero
+        let subtotal = tarifaBase * cantidadMeses;
+        if (tieneInapam) {
+            subtotal -= (subtotal * 0.20);
+        }
+
+        document.getElementById('inputTotal').value = subtotal.toFixed(2);
+    }
+
+    // Arrancar el llenado de fechas al cargar la página
+    window.onload = inicializarFechas;
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

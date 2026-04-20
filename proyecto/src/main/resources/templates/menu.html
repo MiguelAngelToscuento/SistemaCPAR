@@ -1,116 +1,28 @@
 <!DOCTYPE html>
 <html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Panel Principal - Texcalac</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-
     <style>
-        :root {
-            --color-vino-oscuro: #4a0d16;
-            --bg-claro: #fbfbfb;
-        }
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
 
-        body {
-            background-color: var(--bg-claro);
-            font-family: Arial, sans-serif;
-        }
+        .menu-btn { background-color: var(--color-vino); color: white; border-radius: 12px; border: none; width: 100%; max-width: 320px; min-height: 110px; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .menu-btn:hover { transform: scale(1.03); color: white; box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
 
-        /*ESTILOS DEL ENCABEZADO*/
-        .franja-vino {
-            background-color: var(--color-vino-oscuro);
-            display: flex;
-            align-items: center;
-            height: 85px;
-            padding: 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-container {
-            background-color: white;
-            height: 100%;
-            padding: 5px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-container img {
-            max-height: 70px;
-        }
-
-        .header-title {
-            color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-left: 30px;
-            margin-bottom: 0;
-        }
-
-        /*ESTILOS DE LOS BOTONES DEL MENÚ*/
-        .menu-btn {
-            background-color: var(--color-vino-oscuro);
-            color: white;
-            border-radius: 12px;
-            border: none;
-            width: 100%;
-            max-width: 320px;
-            min-height: 110px;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .menu-btn:hover {
-            transform: scale(1.03);
-            color: white;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /*ESTILOS DE LA TARJETA DE INFORMACIÓN*/
-        .info-card {
-            background-color: white;
-            border: 1px solid #d1d1d1;
-            border-radius: 12px;
-            overflow: hidden;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-header {
-            background-color: var(--color-vino-oscuro);
-            color: white;
-            text-align: center;
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .info-body {
-            padding: 30px 20px;
-            text-align: center;
-            color: #4a0d16;
-            font-weight: 500;
-        }
-
-        .info-body p {
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-        }
-
-        .info-body p:last-child {
-            margin-bottom: 0;
-        }
+        .info-card { background-color: white; border: 1px solid #d1d1d1; border-radius: 12px; overflow: hidden; width: 100%; max-width: 450px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .info-header { background-color: var(--color-vino); color: white; text-align: center; padding: 12px; font-size: 1rem; font-weight: bold; }
+        .info-body { padding: 30px 20px; text-align: center; color: var(--color-vino); font-weight: 500; }
+        .info-body p { margin-bottom: 12px; font-size: 1.1rem; }
+        .info-body p:last-child { margin-bottom: 0; }
     </style>
 </head>
-
 <body class="d-flex flex-column h-100">
 
 <header class="franja-vino w-100">
@@ -121,48 +33,28 @@
 </header>
 
 <main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center my-5">
-
-    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show w-100 text-center shadow-sm mb-4" style="max-width: 1000px;" role="alert">
-        <strong th:text="${mensajeExito}">¡Éxito!</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show w-100 text-center shadow-sm mb-4" style="max-width: 1000px;">
+        <strong th:text="${mensajeExito}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
     <div class="row w-100 justify-content-center align-items-center g-5" style="max-width: 1000px;">
-
         <div class="col-md-5 d-flex flex-column gap-4 align-items-center align-items-md-start">
-
-            <a th:href="@{/pagos/realizar}" class="menu-btn">
-                Realizar Pago
-            </a>
-
-            <a th:href="@{/consultar}" class="menu-btn">
-                Estado de cuenta
-            </a>
-
-            <a th:href="@{/usuarios/nuevo}" class="menu-btn">
-                Registrar nuevo Usuario
-            </a>
-
+            <a th:href="@{/pagos/realizar}" class="menu-btn">Realizar Pago</a>
+            <a th:href="@{/consultar}" class="menu-btn">Estado de cuenta</a>
+            <a th:href="@{/usuarios/nuevo}" class="menu-btn">Registrar nuevo Usuario</a>
         </div>
-
         <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
-
             <div class="info-card">
-                <div class="info-header">
-                    Información del Día
-                </div>
+                <div class="info-header">Información del Día</div>
                 <div class="info-body">
-                    <p>Último Pago: <span th:text="${ultimoPagoFecha}">26-11-2025</span>, <span th:text="${ultimoPagoMonto}">-$250</span></p>
-                    <p>Adeudos Activos: <span th:text="${adeudosActivos}">15</span> cuentas</p>
+                    <p>Último Pago: <span th:text="${ultimoPagoFecha}">--</span>, <span th:text="${ultimoPagoMonto}">--</span></p>
+                    <p>Adeudos Activos: <span th:text="${adeudosActivos}">--</span> cuentas</p>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

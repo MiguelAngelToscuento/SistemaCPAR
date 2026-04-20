@@ -1,37 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Buscar Cuenta - SCPAR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Buscar Cuenta - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .header { background-color: #4a0404; color: white; width: 100%; padding: 20px; text-align: center; font-weight: bold; }
-        .search-container { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 50px; width: 400px; text-align: center; }
-        input[type="number"] { width: 80%; padding: 12px; margin: 20px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
-        .btn-buscar { background-color: #4a0404; color: white; padding: 12px 30px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-buscar:hover { background-color: #630505; }
-        .error-msg { color: #d9534f; margin-top: 15px; font-size: 14px; }
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+        .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
+        .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
+        .btn-back:hover { color: white; transform: scale(1.1); }
+        .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 10px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; }
+        .btn-blanco:hover { background-color: #f0f0f0; transform: scale(1.02); }
     </style>
 </head>
-<body>
-    <div class="header">Sistema de Control de Pagos de Agua y Registros</div>
+<body class="d-flex flex-column h-100">
 
-    <div class="search-container">
-        <h2>Consulta de Estado</h2>
-        <div class="d-flex align-items-center mb-4 border-bottom border-secondary pb-2">
-            <a th:href="@{/administrador/menu}" class="text-white text-decoration-none me-3 fs-4 border border-white rounded px-2 py-0">←</a>
-        </div>
-        <p>Ingresa el folio de la tarjeta para continuar</p>
-        
+<header class="franja-vino w-100">
+    <div class="logo-container">
+        <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
+    </div>
+    <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
+</header>
+
+<main class="container d-flex flex-column align-items-center justify-content-center flex-grow-1 my-5">
+    <div class="caja-oscura text-center" style="max-width: 450px; width: 100%;">
+        <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
+
+        <h2 class="fw-bold mb-4 border-bottom pb-2">Consulta de Estado</h2>
+        <p class="mb-4" style="font-size: 1.1rem;">Ingresa el folio de la tarjeta para continuar</p>
+
         <form th:action="@{/buscar}" method="POST">
-            <input type="number" name="folio" placeholder="Ej. 12345" required>
-            <br>
-            <button type="submit" class="btn-buscar">Consultar Estado</button>
+            <input type="number" name="folio" class="form-control mb-4 text-center fs-5 py-2" placeholder="Ej. 1024" required autofocus>
+            <button type="submit" class="btn-blanco w-100 shadow-sm">Buscar Historial</button>
         </form>
 
-        <div th:if="${error}" class="error-msg">
-            <p th:text="${error}"></p>
+        <div th:if="${error}" class="alert alert-danger mt-4 p-2" style="font-size: 0.9rem;">
+            <span th:text="${error}"></span>
         </div>
     </div>
+</main>
 </body>
 </html>
