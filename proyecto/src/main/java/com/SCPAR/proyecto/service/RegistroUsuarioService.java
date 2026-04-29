@@ -26,6 +26,7 @@ public class RegistroUsuarioService {
 
     @Transactional
     public void registrarUsuario(RegistroUsuarioDTO dto) {
+
         CuentaServicio nuevaCuenta = new CuentaServicio();
 
         // 1. AQUI TOMAMOS EL FOLIO MANUAL
