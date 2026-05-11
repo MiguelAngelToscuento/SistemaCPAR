@@ -45,7 +45,7 @@
         <div class="fila-info"><span class="label-gris">Último Pago:</span> <span class="text-end" th:text="${cuenta.ultimaFechaPago != null ? #temporals.format(cuenta.ultimaFechaPago, 'dd/MM/yyyy') : 'Sin registros'}"></span></div>
 
         <div class="fila-info border-0 mt-3 align-items-center">
-            <span class="label-gris fs-4 text-white">Deuda Actual:</span>
+            <span class="label-gris fs-4 text-white">Tarifa del servicio:</span>
             <span class="fs-3 fw-bold text-warning" th:text="${'$' + cuenta.montoTotalDeuda}"></span>
         </div>
 
