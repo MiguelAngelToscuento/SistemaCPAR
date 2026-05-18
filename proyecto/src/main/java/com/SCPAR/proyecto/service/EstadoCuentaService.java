@@ -28,28 +28,36 @@ public class EstadoCuentaService {
         EstadoCuentaDTO dto = new EstadoCuentaDTO();
         dto.setFolioTarjeta(cuenta.getFolioTarjeta());
         dto.setNombreTitular(cuenta.getNombres() + " " + cuenta.getApellidoPaterno() + " " + (cuenta.getApellidoMaterno() != null ? cuenta.getApellidoMaterno() : ""));
-        
+
         // Uso de cuenta.getCalle() según tu entidad
         if(cuenta.getCalle() != null) {
             dto.setDomicilioCompleto(cuenta.getCalle().getNombreCalle() + " #" + cuenta.getNumeroCasa());
         }
         dto.setCodigoPostal(cuenta.getCodigoPostal());
-        
+
         // Buscamos el servicio por el idServicio que tiene la cuenta
         if(cuenta.getIdServicio() != null) {
             CatTipoServicio servicio = servicioRepo.findById(cuenta.getIdServicio()).orElse(null);
             if (servicio != null) {
                 dto.setTipoServicio(servicio.getNombreServicio());
                 double tarifa = servicio.getTarifa().doubleValue();
-                int meses = 1; // Valor de ejemplo
+                int meses = 1; // Valor de ejemplo (luego puedes calcular los meses reales)
+
+                double deuda = tarifa * meses; // Calculamos la deuda base
+
+                // ¡NUEVO!: Verificamos si tiene INAPAM y aplicamos el 20%
+                if (cuenta.getDescuentoInapam() != null && cuenta.getDescuentoInapam()) {
+                    deuda = deuda - (deuda * 0.20);
+                }
+
                 dto.setMesesPendientes(meses);
-                dto.setMontoTotalDeuda(tarifa * meses);
+                dto.setMontoTotalDeuda(deuda); // Guardamos la deuda ya con descuento
             }
         }
-        
+
         // El campo es Boolean
         dto.setDescuentoInapamStr(cuenta.getDescuentoInapam() != null && cuenta.getDescuentoInapam() ? "Si" : "No");
-        
+
         // Busca la fecha en PagoRepository (usando p.cuenta.folioTarjeta)
         dto.setUltimaFechaPago(pagoRepo.findUltimaFechaByFolio(folio));
 

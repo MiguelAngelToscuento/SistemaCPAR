@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historial de Pagos - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <style>
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+
+        /* LA CAJA ELEGANTE */
+        .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
+        .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
+        .btn-back:hover { color: white; transform: scale(1.1); }
+
+        /* ESTILOS ESPECÍFICOS PARA LA TABLA EN FONDO VINO */
+        .table-custom { margin-top: 20px; width: 100%; color: white; }
+        .table-custom th { background-color: rgba(255, 255, 255, 0.1) !important; color: white !important; border-bottom: 2px solid rgba(255,255,255,0.3) !important; text-align: center; padding: 12px; font-weight: bold; }
+        .table-custom td { background-color: transparent !important; color: white !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; text-align: center; vertical-align: middle; padding: 12px; }
+        .table-custom tr:hover td { background-color: rgba(255,255,255,0.05) !important; }
+    </style>
+</head>
+<body class="d-flex flex-column h-100">
+
+<header class="franja-vino w-100">
+    <div class="logo-container">
+        <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
+    </div>
+    <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
+</header>
+
+<main class="container d-flex flex-column align-items-center justify-content-center flex-grow-1 my-5">
+    <div class="caja-oscura" style="max-width: 850px; width: 100%;">
+        <a th:href="@{/estado-cuenta/{folio}(folio=${folio})}" class="btn-back" title="Volver al Estado de Cuenta">←</a>
+
+        <h2 class="fw-bold mb-4 text-center border-bottom pb-3">Historial de Pagos</h2>
+        <p class="text-center mb-4" style="font-size: 1.15rem;">Historial del Folio: <span class="fw-bold text-warning fs-4" th:text="${folio}"></span></p>
+
+        <div th:if="${#lists.isEmpty(pagos)}" class="alert alert-warning text-center shadow-sm">
+            <strong>Sin registros:</strong> Este usuario aún no tiene pagos en el sistema.
+        </div>
+
+        <div class="table-responsive" th:if="${!#lists.isEmpty(pagos)}">
+            <table class="table table-custom">
+                <thead>
+                <tr>
+                    <th>N° Recibo</th>
+                    <th>Fecha de Pago</th>
+                    <th>Periodo Pagado</th>
+                    <th>Total Pagado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pago : ${pagos}">
+                    <td class="fw-bold" th:text="${pago.idPago}"></td>
+                    <td th:text="${#temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${pago.periodoPagado}"></td>
+                    <td class="fw-bold text-warning fs-5" th:text="${'$' + pago.montoTotal}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

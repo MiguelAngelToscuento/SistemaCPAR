@@ -50,7 +50,7 @@
         </div>
 
         <div class="mt-4 d-flex gap-3">
-            <button class="btn-blanco w-50 shadow-sm">Historial de Pagos</button>
+            <a th:href="@{/historial/{folio}(folio=${cuenta.folioTarjeta})}" class="btn-blanco w-50 shadow-sm text-center" style="text-decoration:none; line-height: 1.5;">Historial de Pagos</a>
             <a href="/consultar" class="btn btn-outline-light w-50 fw-bold d-flex align-items-center justify-content-center">Nueva Búsqueda</a>
         </div>
     </div>
