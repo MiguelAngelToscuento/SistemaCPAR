@@ -3,7 +3,8 @@ package com.SCPAR.proyecto.dto;
 import java.time.LocalDateTime;
 
 public class EstadoCuentaDTO {
-    private Integer folioTarjeta;
+
+    private String folioTarjeta; // Cambiado a String
     private String nombreTitular;
     private String domicilioCompleto;
     private String codigoPostal;
@@ -15,9 +16,9 @@ public class EstadoCuentaDTO {
 
     public EstadoCuentaDTO() {}
 
-    // Getters y Setters
-    public Integer getFolioTarjeta() { return folioTarjeta; }
-    public void setFolioTarjeta(Integer folioTarjeta) { this.folioTarjeta = folioTarjeta; }
+    // --- GETTERS Y SETTERS ---
+    public String getFolioTarjeta() { return folioTarjeta; }
+    public void setFolioTarjeta(String folioTarjeta) { this.folioTarjeta = folioTarjeta; }
     public String getNombreTitular() { return nombreTitular; }
     public void setNombreTitular(String nombreTitular) { this.nombreTitular = nombreTitular; }
     public String getDomicilioCompleto() { return domicilioCompleto; }

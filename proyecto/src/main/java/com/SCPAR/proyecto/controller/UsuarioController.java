@@ -19,7 +19,6 @@ public class UsuarioController {
     @Autowired
     private RegistroUsuarioService registroUsuarioService;
 
-    // consultar los folios de la base de datos directamente con la clase repository
     @Autowired
     private CuentaServicioRepository cuentaRepository;
 
@@ -28,7 +27,12 @@ public class UsuarioController {
         if (!model.containsAttribute("registroDTO")) {
             model.addAttribute("registroDTO", new RegistroUsuarioDTO());
         }
+
+        // Enviamos las calles
         model.addAttribute("listaCalles", registroUsuarioService.obtenerCatCalle());
+
+        // <-- NUEVA LÍNEA: Enviamos los servicios -->
+        model.addAttribute("listaServicios", registroUsuarioService.obtenerCatServicios());
 
         return "usuario-form";
     }
@@ -36,24 +40,17 @@ public class UsuarioController {
     @PostMapping("/guardar")
     public String guardarUsuario(@ModelAttribute("registroDTO") RegistroUsuarioDTO registroDTO, RedirectAttributes redirectAttributes) {
 
-        //evitar que sea negativo el folio
-        if (registroDTO.getFolioTarjeta() <0){
-            redirectAttributes.addFlashAttribute("mensajeError", "El folio no debe ser un numero negativo");
+        // Validamos si es nulo o está en blanco (para Strings)
+        if (registroDTO.getFolioTarjeta() == null || registroDTO.getFolioTarjeta().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "El folio no debe estar vacío.");
             redirectAttributes.addFlashAttribute("registroDTO", registroDTO);
             return "redirect:/usuarios/nuevo";
         }
 
         // --- 1. EL ESCUDO ANTI-DUPLICADOS ---
-        // Preguntamos a MySQL si el folio que escribieron ya existe en la tabla
         if (cuentaRepository.existsById(registroDTO.getFolioTarjeta())) {
-
-            // Si ya existe, disparamos el mensaje rojo
             redirectAttributes.addFlashAttribute("mensajeError", "El folio " + registroDTO.getFolioTarjeta() + " ya está registrado en el sistema. Verifica la tarjeta.");
-
-            // Guardamos lo que ya había escrito para que no se borre el formulario
             redirectAttributes.addFlashAttribute("registroDTO", registroDTO);
-
-            // Lo rebotamos al formulario
             return "redirect:/usuarios/nuevo";
         } else {
             // --- 2. FLUJO NORMAL DE GUARDADO ---
@@ -68,8 +65,5 @@ public class UsuarioController {
                 return "redirect:/usuarios/nuevo";
             }
         }
-
-
-
     }
 }
