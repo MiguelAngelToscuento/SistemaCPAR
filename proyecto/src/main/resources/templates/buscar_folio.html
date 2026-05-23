@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Buscar Cuenta - Texcalac</title>
+    <title>Consultar Estado de Cuenta - Texcalac</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <style>
         :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
@@ -32,18 +32,26 @@
     <div class="caja-oscura text-center" style="max-width: 450px; width: 100%;">
         <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
 
-        <h2 class="fw-bold mb-4 border-bottom pb-2">Consulta de Estado</h2>
-        <p class="mb-4" style="font-size: 1.1rem;">Ingresa el folio de la tarjeta para continuar</p>
+        <h2 class="fw-bold mb-4 border-bottom pb-2">Estado de Cuenta</h2>
 
-        <form th:action="@{/buscar}" method="POST">
-            <input type="number" name="folio" class="form-control mb-4 text-center fs-5 py-2" placeholder="Ej. 1024" required autofocus>
-            <button type="submit" class="btn-blanco w-100 shadow-sm">Buscar Historial</button>
-        </form>
-
-        <div th:if="${error}" class="alert alert-danger mt-4 p-2" style="font-size: 0.9rem;">
+        <div th:if="${error}" class="alert alert-danger p-2 mb-3" style="font-size: 0.9rem;">
             <span th:text="${error}"></span>
         </div>
+
+        <form th:action="@{/buscar}" method="post">
+            <div class="text-start mb-4">
+                <label class="form-label fw-bold">Folio de la tarjeta</label>
+                <input type="text" name="folio" class="form-control form-control-lg text-center"
+                       placeholder="Ej. pin-0065"
+                       pattern="[A-Za-z0-9\-]+"
+                       title="Puede contener letras, números y guiones" required autofocus>
+            </div>
+
+            <button class="btn-blanco w-100 shadow-sm" type="submit">Buscar Cuenta</button>
+        </form>
     </div>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

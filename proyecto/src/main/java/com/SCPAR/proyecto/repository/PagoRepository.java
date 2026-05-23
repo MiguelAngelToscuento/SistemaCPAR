@@ -10,9 +10,10 @@ import java.util.List;
 
 @Repository
 public interface PagoRepository extends JpaRepository<Pago, Integer> {
-    
+
     @Query("SELECT MAX(p.fechaPago) FROM Pago p WHERE p.cuenta.folioTarjeta = :folio")
-    LocalDateTime findUltimaFechaByFolio(@Param("folio") Integer folio);
+    LocalDateTime findUltimaFechaByFolio(@Param("folio") String folio); // Cambiado a String
+
     // Busca todos los pagos de un folio y los ordena de más reciente a más viejo
-    List<Pago> findByCuenta_FolioTarjetaOrderByFechaPagoDesc(Integer folioTarjeta);
+    List<Pago> findByCuenta_FolioTarjetaOrderByFechaPagoDesc(String folioTarjeta); // Cambiado a String
 }

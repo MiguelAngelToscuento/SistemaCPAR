@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Configuración del Sistema - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <style>
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+
+        .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
+        .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
+        .btn-back:hover { color: white; transform: scale(1.1); }
+
+        .form-label { font-weight: bold; font-size: 0.95rem; margin-bottom: 0.3rem; }
+        .form-control { border-radius: 6px; border: none; padding: 0.5rem 1rem; }
+
+        .table-custom { background-color: rgba(255, 255, 255, 0.9); border-radius: 8px; overflow: hidden; }
+        .table-custom th { background-color: #2b060b !important; color: white !important; text-align: center; font-weight: bold; }
+        .table-custom td { text-align: center; vertical-align: middle; color: #212529; font-weight: 500; }
+    </style>
+</head>
+<body class="d-flex flex-column h-100">
+
+<header class="franja-vino w-100">
+    <div class="logo-container">
+        <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
+    </div>
+    <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
+</header>
+
+<main class="container flex-grow-1 my-5">
+    <div class="caja-oscura w-100">
+        <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al Menú">←</a>
+        <h2 class="fw-bold mb-5 text-center border-bottom pb-3">Gestión de Catálogos (Configuración)</h2>
+
+        <div class="row g-5">
+            <div class="col-md-6 border-end border-secondary">
+                <h4 class="text-warning fw-bold mb-3">📍 Registrar Nueva Calle</h4>
+
+                <div th:if="${errorCalle}" class="alert alert-danger p-2 small text-center" th:text="${errorCalle}"></div>
+                <div th:if="${exitoCalle}" class="alert alert-success p-2 small text-center" th:text="${exitoCalle}"></div>
+
+                <form th:action="@{/configuracion/calle/guardar}" method="post" class="mb-4">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la Calle</label>
+                        <div class="input-group">
+                            <input type="text" name="nombreCalle" class="form-control" placeholder="Ej. Avenida Cuauhtémoc" required>
+                            <button type="submit" class="btn btn-light fw-bold text-dark">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <h5 class="fw-bold mb-3 text-white-50">Calles Registradas Actualmente:</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-custom shadow-sm">
+                        <thead>
+                        <tr>
+                            <th style="width: 20%;">ID</th>
+                            <th>Nombre de la Calle</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="calle : ${listaCalles}">
+                            <td th:text="${calle.idCalle}"></td>
+                            <td th:text="${calle.nombreCalle}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h4 class="text-warning fw-bold mb-3">💧 Agregar o Modificar Tarifas</h4>
+
+                <div th:if="${errorServicio}" class="alert alert-danger p-2 small text-center" th:text="${errorServicio}"></div>
+                <div th:if="${exitoServicio}" class="alert alert-success p-2 small text-center" th:text="${exitoServicio}"></div>
+
+                <form th:action="@{/configuracion/servicio/guardar}" method="post" class="mb-4">
+                    <p class="small text-white-50 mb-3">Nota: Si escribes un nombre de servicio existente, el sistema actualizará su precio automáticamente.</p>
+                    <div class="row g-2">
+                        <div class="col-sm-7">
+                            <label class="form-label">Nombre del Servicio</label>
+                            <input type="text" name="nombreServicio" class="form-control" placeholder="Ej. Fraccionamiento" required>
+                        </div>
+                        <div class="col-sm-5">
+                            <label class="form-label">Tarifa Mensual ($)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" name="tarifa" class="form-control" placeholder="0.00" required>
+                                <button type="submit" class="btn btn-light fw-bold text-dark">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <h5 class="fw-bold mb-3 text-white-50">Tarifas del Servicio Vigentes:</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-custom shadow-sm">
+                        <thead>
+                        <tr>
+                            <th style="width: 20%;">ID</th>
+                            <th>Tipo de Servicio</th>
+                            <th>Precio Mensual</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="servicio : ${listaServicios}">
+                            <td th:text="${servicio.idServicio}"></td>
+                            <td th:text="${servicio.nombreServicio}"></td>
+                            <td class="fw-bold text-danger" th:text="${'$' + servicio.tarifa}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
