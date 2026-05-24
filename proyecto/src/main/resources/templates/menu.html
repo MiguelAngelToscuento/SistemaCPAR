@@ -37,7 +37,7 @@
 
     <div class="dropdown">
         <button class="btn btn-outline-light dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            👤 Administrador
+            Configuración
         </button>
         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
             <li><a class="dropdown-item" href="#">(Espacio para otra opción)</a></li>
@@ -74,5 +74,22 @@
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Seleccionamos todas las alertas que estén en la pantalla
+        let alertas = document.querySelectorAll('.alert');
+
+        alertas.forEach(function(alerta) {
+            // Programamos un temporizador de 3000 milisegundos (3 segundos)
+            setTimeout(function() {
+                // Usamos la animación nativa de Bootstrap para cerrarla suavemente
+                let alertaBootstrap = new bootstrap.Alert(alerta);
+                alertaBootstrap.close();
+            }, 3000);
+        });
+    });
+</script>
+
 </body>
 </html>
