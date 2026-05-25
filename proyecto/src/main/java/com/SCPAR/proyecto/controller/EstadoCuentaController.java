@@ -20,33 +20,29 @@ public class EstadoCuentaController {
     @Autowired
     private EstadoCuentaService estadoCuentaService;
 
-    // INYECTAMOS EL REPOSITORIO DE PAGOS PARA EL HISTORIAL
     @Autowired
     private PagoRepository pagoRepository;
 
-    // 1. Mostrar la página de inicio con la barra de búsqueda
     @GetMapping("/consultar")
     public String mostrarBuscador() {
         return "buscar_folio";
     }
 
-    // 2. Procesar el formulario de búsqueda
     @PostMapping("/buscar")
-    public String procesarBusqueda(@RequestParam("folio") Integer folio, Model model) {
+    public String procesarBusqueda(@RequestParam("folio") String folio, Model model) { // Cambiado a String
         EstadoCuentaDTO datos = estadoCuentaService.obtenerDetalleEstado(folio);
 
         if (datos != null) {
             model.addAttribute("cuenta", datos);
-            return "estado_cuenta_vista"; // Nos lleva a la info si existe
+            return "estado_cuenta_vista";
         } else {
             model.addAttribute("error", "El folio " + folio + " no existe en el sistema.");
-            return "buscar_folio"; // Regresa al buscador con error
+            return "buscar_folio";
         }
     }
 
-    // Mantener acceso directo por URL si lo necesitas
     @GetMapping("/estado-cuenta/{folio}")
-    public String verEstadoDirecto(@PathVariable Integer folio, Model model) {
+    public String verEstadoDirecto(@PathVariable String folio, Model model) { // Cambiado a String
         EstadoCuentaDTO datos = estadoCuentaService.obtenerDetalleEstado(folio);
         if (datos != null) {
             model.addAttribute("cuenta", datos);
@@ -55,15 +51,13 @@ public class EstadoCuentaController {
         return "redirect:/?error=notfound";
     }
 
-    // 3. MOSTRAR HISTORIAL DE PAGOS (¡Aquí es donde debe ir!)
     @GetMapping("/historial/{folio}")
-    public String verHistorial(@PathVariable Integer folio, Model model) {
-        // Buscamos todos los tickets de ese folio
+    public String verHistorial(@PathVariable String folio, Model model) { // Cambiado a String
         List<Pago> pagos = pagoRepository.findByCuenta_FolioTarjetaOrderByFechaPagoDesc(folio);
 
         model.addAttribute("pagos", pagos);
         model.addAttribute("folio", folio);
 
-        return "historial_pagos"; // Llama a nuestro nuevo HTML
+        return "historial_pagos";
     }
 }

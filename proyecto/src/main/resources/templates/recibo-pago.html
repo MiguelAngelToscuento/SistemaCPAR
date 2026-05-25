@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo de Pago</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; color: #333; }
+
+        /* LA CAJA DEL RECIBO (Simulación de papel) */
+        .recibo-container {
+            background-color: white;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+            /* --- MARCA DE AGUA DEL LOGO DETRÁS --- */
+            position: relative;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* --- ESTILOS DE LA MARCA DE AGUA --- */
+        .recibo-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/LOGO.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 400px;
+            opacity: 0.10;
+            z-index: 0;
+        }
+
+        /* --- ASEGURAR QUE EL CONTENIDO ESTÉ FRENTE A LA MARCA DE AGUA --- */
+        .recibo-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ENCABEZADO INSTITUCIONAL */
+        .header { text-align: center; border-bottom: 2px solid #4a0d16; padding-bottom: 20px; margin-bottom: 20px; }
+        .header img { max-height: 80px; margin-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 1.2rem; color: #4a0d16; text-transform: uppercase; }
+        .header h2 { margin: 5px 0 0; font-size: 1rem; color: #555; }
+
+        /* DATOS DEL RECIBO */
+        .datos-fila { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+        .datos-fila strong { color: #4a0d16; }
+
+        .caja-resaltada { background-color: #f9f9f9; padding: 15px; border: 1px dashed #ccc; margin: 20px 0; text-align: center; }
+        .total { font-size: 1.5rem; font-weight: bold; color: #4a0d16; margin: 10px 0 0; }
+
+        /* TABLA DE INFO PAGO */
+        .info-pago { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .info-pago th { background-color: #4a0d16; color: white; padding: 10px; text-align: left; }
+        .info-pago td { border-bottom: 1px solid #ddd; padding: 10px; }
+
+        /* FIRMAS */
+        .firmas { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; }
+        .firma-linea { border-top: 1px solid #333; width: 45%; padding-top: 5px; font-size: 0.85rem; }
+
+        /* BOTONES DE ACCIÓN (SE OCULTAN AL IMPRIMIR) */
+        .acciones { text-align: center; margin-top: 30px; }
+        .btn { padding: 10px 20px; font-size: 1rem; cursor: pointer; border: none; border-radius: 5px; color: white; font-weight: bold; text-decoration: none; margin: 0 10px; }
+        .btn-imprimir { background-color: #198754; }
+        .btn-volver { background-color: #4a0d16; }
+
+        /* --- LA MAGIA DEL CSS: ESTO SOLO APLICA A LA IMPRESORA --- */
+        @page {
+            margin: 0;
+        }
+
+        @media print {
+            body { background-color: white; padding: 1.5cm; }
+            .recibo-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            .acciones { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="recibo-container">
+    <div class="recibo-content">
+        <div class="header">
+            <h1>Presidencia de Comunidad</h1>
+            <h2>Santa María Texcalac</h2>
+            <p style="margin: 5px 0 0; font-size: 0.9rem;">Comprobante de Pago de Servicio</p>
+        </div>
+
+        <div class="datos-fila">
+            <span><strong>Folio del Recibo:</strong> <span th:text="${pago.idPago}">000</span></span>
+            <span><strong>Fecha:</strong> <span th:text="${#temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm')}">--/--/----</span></span>
+        </div>
+
+        <div class="datos-fila mt-2">
+            <span><strong>Folio de Tarjeta:</strong> <span th:text="${pago.cuenta.folioTarjeta}">---</span></span>
+        </div>
+        <div class="datos-fila">
+            <span><strong>Titular:</strong> <span th:text="${pago.cuenta.nombres + ' ' + pago.cuenta.apellidoPaterno + ' ' + pago.cuenta.apellidoMaterno}">---</span></span>
+        </div>
+
+        <div class="caja-resaltada">
+            <div style="font-size: 1.1rem;">Concepto de Pago</div>
+            <div style="font-size: 1.2rem; margin-top: 5px;" th:text="${pago.periodoPagado}">---</div>
+            <div class="total" th:text="'Total Pagado: $' + ${pago.montoTotal}">$0.00</div>
+        </div>
+
+
+
+        <div class="firmas">
+            <div class="firma-linea">Sello de la Presidencia</div>
+            <div class="firma-linea">Firma de Conformidad</div>
+        </div>
+    </div>
+</div>
+
+<div class="acciones">
+    <button class="btn btn-imprimir" onclick="window.print()">Imprimir Recibo</button>
+    <a th:href="@{/administrador/menu}" class="btn btn-volver">Volver al Menú</a>
+</div>
+
+</body>
+</html>

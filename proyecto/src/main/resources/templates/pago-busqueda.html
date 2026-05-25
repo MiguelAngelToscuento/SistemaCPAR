@@ -3,25 +3,72 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Realizar Pago - Texcalac</title>
+    <title>Realizar Pago</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
-        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; margin: 0; }
+        :root {
+            --color-vino: #4a0d16;
+            --bg-claro: #f4f4f4;
+        }
+        body {
+            background-color: var(--bg-claro);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* CABECERA */
         .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
         .logo-container img { max-height: 70px; }
-        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+        .header-title { color: white; font-size: 1.2rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
 
-        .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
-        .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
-        .btn-back:hover { color: white; transform: scale(1.1); }
-        .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 10px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; }
-        .btn-blanco:hover { background-color: #f0f0f0; transform: scale(1.02); }
+        /* TARJETA PRINCIPAL */
+        .caja-oscura {
+            background-color: var(--color-vino);
+            color: white;
+            border-radius: 12px;
+            padding: 35px 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+        }
+        .btn-back { position: absolute; top: 20px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.2rem; text-decoration: none; transition: 0.2s; }
+        .btn-back:hover { color: white; }
 
-        .rango-container { background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 1rem; }
-        .info-usuario { background-color: rgba(255,255,255,0.9); color: var(--color-vino); padding: 15px; border-radius: 8px; font-size: 0.95rem; display: none; }
-        .badge-inapam { background-color: #198754; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 10px; }
+        /* INPUTS Y CAJAS INTERNAS */
+        .form-label { font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem; color: white; }
+        .form-control, .form-select { border-radius: 6px; border: none; padding: 0.6rem 1rem; font-size: 1rem; }
+        .btn-buscar { background-color: white; color: black; border: none; font-weight: bold; padding: 0 20px; border-radius: 0 6px 6px 0; }
+
+        .rango-container { background: rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 10px; margin-bottom: 1.5rem; }
+
+        /* TARJETA DE INFO USUARIO BLANCA */
+        .info-usuario { background-color: #f8f9fa; color: #333; padding: 15px 20px; border-radius: 8px; margin-bottom: 1.5rem; }
+        .info-usuario .nombre-titular { color: var(--color-vino); font-weight: bold; font-size: 1.15rem; }
+        .badge-inapam { background-color: #198754; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
+        .divisor-rojo { border-right: 1px solid rgba(220, 53, 69, 0.5); }
+
+        /* BOTÓN REGISTRAR PAGO */
+        .btn-registrar-pago {
+            background-color: white;
+            color: var(--color-vino);
+            border: none;
+            padding: 12px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .btn-registrar-pago:hover:not(:disabled) { background-color: #f0f0f0; transform: scale(1.02); }
+        .btn-registrar-pago:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* OPACIDAD PARA ESTADO DESHABILITADO */
+        .estado-inactivo { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body class="d-flex flex-column h-100">
@@ -33,205 +80,173 @@
     <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
 </header>
 
-<main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center my-4">
-    <form id="formularioPago" th:action="@{/pagos/guardar-final}" method="post" style="width: 100%; max-width: 600px;">
-        <div class="caja-oscura mx-auto">
-            <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
-            <h2 class="fw-bold mb-4 text-center border-bottom pb-2">Realizar Cobro</h2>
+<main class="container flex-grow-1 d-flex flex-column align-items-center justify-content-center my-5">
 
-            <div id="alertaError" class="alert alert-danger p-2 text-center" style="display: none; font-size: 0.9rem;">Folio no encontrado.</div>
+    <div class="caja-oscura mx-auto">
+        <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
+        <h2 class="fw-bold mb-4 text-center border-bottom border-secondary pb-3">Realizar Cobro</h2>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold">Folio de tarjeta</label>
+        <div th:if="${error}" class="alert alert-danger p-2 text-center shadow-sm rounded" style="font-size: 0.9rem;" th:text="${error}"></div>
+        <div th:if="${mensajeExito}" class="alert alert-success p-2 text-center shadow-sm rounded" style="font-size: 0.9rem;" th:text="${mensajeExito}"></div>
+
+        <form th:action="@{/pagos/buscar-cuenta}" method="post" class="mb-4">
+            <label class="form-label">Folio de tarjeta</label>
+            <div class="input-group">
+                <input type="text" name="folio" class="form-control" th:value="${folioBuscado}" placeholder="Introduce el folio" pattern="[A-Za-z0-9\-]+" required>
+                <button type="submit" class="btn-buscar">Buscar</button>
+            </div>
+        </form>
+
+        <div th:if="${cuenta == null}">
+            <div class="rango-container estado-inactivo">
+                <label class="form-label d-block text-center mb-3">Periodo de pago (Rango)</label>
+                <div class="row g-2 align-items-center mb-2">
+                    <div class="col-7"><select class="form-select"><option>Mes inicio</option></select></div>
+                    <div class="col-5"><select class="form-select"><option>2026</option></select></div>
+                </div>
+                <div class="text-center my-1"><span class="fw-bold text-white" style="font-size: 0.9rem;">a</span></div>
+                <div class="row g-2 align-items-center">
+                    <div class="col-7"><select class="form-select"><option>Mes fin</option></select></div>
+                    <div class="col-5"><select class="form-select"><option>2026</option></select></div>
+                </div>
+            </div>
+
+            <div class="mb-4 estado-inactivo">
+                <label class="form-label d-block mb-1 fs-6">Monto</label>
                 <div class="input-group">
-                    <input type="number" name="folio" id="inputFolio" class="form-control" placeholder="Introduce el folio" required>
-                    <button type="button" class="btn btn-light fw-bold" onclick="buscarDatosCuenta()">Buscar</button>
+                    <span class="input-group-text bg-white text-dark fw-bold border-0">$</span>
+                    <input type="text" class="form-control bg-white text-dark fw-bold border-0" value="0.00" disabled>
                 </div>
             </div>
 
-            <div id="cajaInfoUsuario" class="info-usuario mb-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 border-danger">
-                    <strong class="fs-5" id="txtNombre">---</strong>
-                    <span id="badgeInapam" class="badge-inapam" style="display: none;">INAPAM (20%)</span>
+            <button class="btn-registrar-pago" disabled>Registrar Pago</button>
+        </div>
+
+        <form th:action="@{/pagos/guardar-final}" method="post" th:if="${cuenta != null}">
+
+            <input type="hidden" name="folio" th:value="${folioBuscado}">
+            <input type="hidden" id="hiddenTarifa" th:value="${tarifaBase}">
+            <input type="hidden" id="hiddenInapam" th:value="${cuenta.descuentoInapam != null ? cuenta.descuentoInapam : false}">
+
+            <div class="info-usuario shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom border-secondary-subtle">
+                    <span class="nombre-titular" th:text="${cuenta.nombres + ' ' + cuenta.apellidoPaterno + ' ' + (cuenta.apellidoMaterno != null ? cuenta.apellidoMaterno : '')}">---</span>
+                    <span class="badge-inapam" th:if="${cuenta.descuentoInapam}">INAPAM (-$20)</span>
                 </div>
-                <div class="row text-center fw-bold">
-                    <div class="col">Servicio: <br><span class="fw-normal text-dark" id="txtServicio">---</span></div>
-                    <div class="col border-start border-danger">Tarifa Base: <br><span class="fw-normal text-dark" id="txtTarifa">$0.00</span></div>
+                <div class="row text-center mt-2" style="font-size: 0.9rem;">
+                    <div class="col divisor-rojo">
+                        <span class="text-muted">Servicio:</span> <strong class="text-dark" th:text="${tipoServicio}">---</strong>
+                    </div>
+                    <div class="col">
+                        <span class="text-muted">Tarifa:</span> <strong class="text-dark" th:text="${'$' + tarifaBase}">$0.00</strong>
+                    </div>
                 </div>
-                <input type="hidden" id="hiddenTarifaBase" value="0">
-                <input type="hidden" id="hiddenTieneInapam" value="false">
             </div>
 
-            <div class="rango-container" id="cajaPeriodo" style="opacity: 0.5; pointer-events: none;">
-                <label class="form-label d-block text-center mb-3 fw-bold">Periodo de pago (Rango)</label>
-
+            <div class="rango-container">
+                <label class="form-label d-block text-center mb-3">Periodo de pago (Rango)</label>
                 <div class="row g-2 align-items-center mb-2">
                     <div class="col-7">
-                        <select id="mesInicio" class="form-select calcular-trigger" required>
-                            <option value="1">Enero</option><option value="2">Febrero</option>
-                            <option value="3">Marzo</option><option value="4">Abril</option>
-                            <option value="5">Mayo</option><option value="6">Junio</option>
-                            <option value="7">Julio</option><option value="8">Agosto</option>
-                            <option value="9">Septiembre</option><option value="10">Octubre</option>
-                            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+                        <select name="mesInicio" id="mesInicio" class="form-select calcular-trigger" required>
+                            <option value="1" th:selected="${mesActual == 1}">Enero</option>
+                            <option value="2" th:selected="${mesActual == 2}">Febrero</option>
+                            <option value="3" th:selected="${mesActual == 3}">Marzo</option>
+                            <option value="4" th:selected="${mesActual == 4}">Abril</option>
+                            <option value="5" th:selected="${mesActual == 5}">Mayo</option>
+                            <option value="6" th:selected="${mesActual == 6}">Junio</option>
+                            <option value="7" th:selected="${mesActual == 7}">Julio</option>
+                            <option value="8" th:selected="${mesActual == 8}">Agosto</option>
+                            <option value="9" th:selected="${mesActual == 9}">Septiembre</option>
+                            <option value="10" th:selected="${mesActual == 10}">Octubre</option>
+                            <option value="11" th:selected="${mesActual == 11}">Noviembre</option>
+                            <option value="12" th:selected="${mesActual == 12}">Diciembre</option>
                         </select>
                     </div>
                     <div class="col-5">
-                        <select id="anioInicio" class="form-select select-anio calcular-trigger" required></select>
+                        <select name="anioInicio" id="anioInicio" class="form-select calcular-trigger" required>
+                            <option th:each="anio : ${listaAnios}" th:value="${anio}" th:text="${anio}" th:selected="${anio == anioActual}"></option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="text-center my-1"><span class="fw-bold">a</span></div>
+                <div class="text-center my-1"><span class="fw-bold text-white" style="font-size: 0.9rem;">a</span></div>
 
                 <div class="row g-2 align-items-center">
                     <div class="col-7">
-                        <select id="mesFin" class="form-select calcular-trigger" required>
-                            <option value="1">Enero</option><option value="2">Febrero</option>
-                            <option value="3">Marzo</option><option value="4">Abril</option>
-                            <option value="5">Mayo</option><option value="6">Junio</option>
-                            <option value="7">Julio</option><option value="8">Agosto</option>
-                            <option value="9">Septiembre</option><option value="10">Octubre</option>
-                            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+                        <select name="mesFin" id="mesFin" class="form-select calcular-trigger" required>
+                            <option value="1" th:selected="${mesActual == 1}">Enero</option>
+                            <option value="2" th:selected="${mesActual == 2}">Febrero</option>
+                            <option value="3" th:selected="${mesActual == 3}">Marzo</option>
+                            <option value="4" th:selected="${mesActual == 4}">Abril</option>
+                            <option value="5" th:selected="${mesActual == 5}">Mayo</option>
+                            <option value="6" th:selected="${mesActual == 6}">Junio</option>
+                            <option value="7" th:selected="${mesActual == 7}">Julio</option>
+                            <option value="8" th:selected="${mesActual == 8}">Agosto</option>
+                            <option value="9" th:selected="${mesActual == 9}">Septiembre</option>
+                            <option value="10" th:selected="${mesActual == 10}">Octubre</option>
+                            <option value="11" th:selected="${mesActual == 11}">Noviembre</option>
+                            <option value="12" th:selected="${mesActual == 12}">Diciembre</option>
                         </select>
                     </div>
                     <div class="col-5">
-                        <select id="anioFin" class="form-select select-anio calcular-trigger" required></select>
+                        <select name="anioFin" id="anioFin" class="form-select calcular-trigger" required>
+                            <option th:each="anio : ${listaAnios}" th:value="${anio}" th:text="${anio}" th:selected="${anio == anioActual}"></option>
+                        </select>
                     </div>
                 </div>
-
-                <div id="errorFechas" class="text-warning text-center mt-2 fw-bold" style="display:none; font-size: 0.85rem;">
-                    La fecha final debe ser igual o posterior a la fecha de inicio.
-                </div>
-
-                <input type="hidden" name="cantidadMeses" id="inputMesesInvisible" value="1">
             </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold">Monto</label>
+            <div class="mb-4 mt-3">
+                <label class="form-label d-block mb-1 fs-6">Monto</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-white text-dark fw-bold fs-5">$</span>
-                    <input type="text" name="monto" id="inputTotal" class="form-control bg-white text-dark fw-bold fs-5" value="0.00" readonly>
+                    <span class="input-group-text bg-white text-dark fw-bold border-0">$</span>
+                    <input type="text" id="inputTotalVisual" class="form-control bg-white text-dark fw-bold border-0" value="0.00" readonly>
                 </div>
             </div>
 
-            <div class="mt-4 text-center">
-                <button type="submit" id="btnCobrar" class="btn-blanco w-100" disabled>Registrar Pago</button>
-            </div>
-        </div>
-    </form>
+            <button type="submit" id="btnSubmitCobro" class="btn-registrar-pago">Registrar Pago</button>
+        </form>
+
+    </div>
 </main>
 
-<script>
-    // 1. INICIALIZAR AÑOS Y MES ACTUAL
-    const inicializarFechas = () => {
-        const selects = document.querySelectorAll('.select-anio');
-        const fechaActual = new Date();
-        const anioActual = fechaActual.getFullYear();
-        const mesActual = fechaActual.getMonth() + 1;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Llenar los años
-        selects.forEach(select => {
-            for (let i = anioActual - 5; i <= anioActual + 5; i++) {
-                let opcion = document.createElement('option');
-                opcion.value = i;
-                opcion.text = i;
-                if (i === anioActual) opcion.selected = true;
-                select.appendChild(opcion);
-            }
-        });
-
-        // Setear el mes actual en los selectores
-        document.getElementById('mesInicio').value = mesActual;
-        document.getElementById('mesFin').value = mesActual;
-
-        // Escuchar cambios en cualquier select para recalcular automático
-        document.querySelectorAll('.calcular-trigger').forEach(el => {
-            el.addEventListener('change', calcularTotalRango);
-        });
-    };
-
-    // 2. BUSCAR DATOS (API JAVA)
-    function buscarDatosCuenta() {
-        const folio = document.getElementById('inputFolio').value;
-        if(!folio) return;
-
-        fetch(`/pagos/api/buscar-cuenta?folio=${folio}`)
-            .then(response => {
-                if (!response.ok) throw new Error('Folio no existe');
-                return response.json();
-            })
-            .then(datos => {
-                document.getElementById('alertaError').style.display = 'none';
-                document.getElementById('cajaInfoUsuario').style.display = 'block';
-
-                document.getElementById('txtNombre').textContent = datos.nombreCompleto;
-                document.getElementById('txtServicio').textContent = datos.tipoServicio;
-                document.getElementById('txtTarifa').textContent = `$${datos.tarifaBase.toFixed(2)}`;
-
-                const badge = document.getElementById('badgeInapam');
-                badge.style.display = datos.tieneInapam ? 'inline-block' : 'none';
-
-                document.getElementById('hiddenTarifaBase').value = datos.tarifaBase;
-                document.getElementById('hiddenTieneInapam').value = datos.tieneInapam;
-
-                document.getElementById('cajaPeriodo').style.opacity = '1';
-                document.getElementById('cajaPeriodo').style.pointerEvents = 'auto';
-
-                calcularTotalRango();
-            })
-            .catch(error => {
-                document.getElementById('alertaError').style.display = 'block';
-                document.getElementById('cajaInfoUsuario').style.display = 'none';
-                document.getElementById('cajaPeriodo').style.opacity = '0.5';
-                document.getElementById('cajaPeriodo').style.pointerEvents = 'none';
-                document.getElementById('btnCobrar').disabled = true;
-                document.getElementById('inputTotal').value = '0.00';
-            });
-    }
-
-    // 3. CALCULAR CON BASE EN RANGO DE FECHAS
-    function calcularTotalRango() {
-        const tarifaBase = parseFloat(document.getElementById('hiddenTarifaBase').value) || 0;
-        const tieneInapam = document.getElementById('hiddenTieneInapam').value === 'true';
-
-        // Obtenemos números de fechas
+<script th:if="${cuenta != null}">
+    function calcularEnVivo() {
         const mInicio = parseInt(document.getElementById('mesInicio').value);
         const aInicio = parseInt(document.getElementById('anioInicio').value);
         const mFin = parseInt(document.getElementById('mesFin').value);
         const aFin = parseInt(document.getElementById('anioFin').value);
 
-        // Fórmula mágica para saber cuántos meses hay entre dos fechas
-        const cantidadMeses = ((aFin - aInicio) * 12) + (mFin - mInicio) + 1;
+        const tarifa = parseFloat(document.getElementById('hiddenTarifa').value);
+        const tieneInapam = document.getElementById('hiddenInapam').value === 'true';
 
-        const btnCobrar = document.getElementById('btnCobrar');
-        const errorFechas = document.getElementById('errorFechas');
-        const inputInvisible = document.getElementById('inputMesesInvisible');
+        let meses = ((aFin - aInicio) * 12) + (mFin - mInicio) + 1;
+        const btn = document.getElementById('btnSubmitCobro');
+        const inputVisual = document.getElementById('inputTotalVisual');
 
-        // Validar si pusieron fechas al revés
-        if (cantidadMeses <= 0) {
-            errorFechas.style.display = 'block';
-            btnCobrar.disabled = true;
-            document.getElementById('inputTotal').value = '0.00';
-            inputInvisible.value = 0;
+        if (meses <= 0) {
+            inputVisual.value = "Rango Inválido";
+            btn.disabled = true;
             return;
         }
 
-        // Si el rango es correcto
-        errorFechas.style.display = 'none';
-        btnCobrar.disabled = false;
-        inputInvisible.value = cantidadMeses; // Se lo pasamos a Java
+        btn.disabled = false;
+        let total = tarifa * meses;
 
-        // Calcular dinero
-        let subtotal = tarifaBase * cantidadMeses;
         if (tieneInapam) {
-            subtotal -= (subtotal * 0.20);
+            total -= (20 * meses);
         }
 
-        document.getElementById('inputTotal').value = subtotal.toFixed(2);
+        inputVisual.value = total.toFixed(2);
     }
 
-    // Arrancar el llenado de fechas al cargar la página
-    window.onload = inicializarFechas;
+    document.querySelectorAll('.calcular-trigger').forEach(select => {
+        select.addEventListener('change', calcularEnVivo);
+    });
+
+    window.onload = calcularEnVivo;
 </script>
 
 </body>

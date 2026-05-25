@@ -45,8 +45,13 @@
       </div>
 
       <div class="row g-3 mb-4 p-4 rounded text-center mx-auto" style="background-color: rgba(255,255,255,0.1); max-width: 500px;">
-        <label for="folioTarjeta" class="form-label fs-5 text-warning mb-0">Número de Folio de la Tarjeta</label>
-        <input type="number" th:field="*{folioTarjeta}" class="form-control form-control-lg text-center fw-bold fs-3 mt-2" id="folioTarjeta" placeholder="Ej. 1024" required autofocus>
+        <label for="folioTarjeta" class="form-label fs-5 text-warning mb-0">Folio de la Tarjeta</label>
+
+        <input type="text" th:field="*{folioTarjeta}" class="form-control form-control-lg text-center fw-bold fs-3 mt-2"
+               id="folioTarjeta" placeholder="Ej. pin-0065"
+               pattern="[A-Za-z0-9\-]+"
+               title="El folio debe contener letras, un guion y números (Ejemplo: pin-0065 o TEX-1234)"
+               required autofocus>
       </div>
 
       <div class="row g-3 mb-3">
@@ -65,19 +70,22 @@
       </div>
 
       <div class="row g-3 mb-3">
-        <div class="col-md-8">
+        <div class="col-md-6">
           <label for="idCalle" class="form-label">Calle</label>
           <select th:field="*{idCalle}" class="form-select" id="idCalle" required>
             <option value="">Seleccione una calle...</option>
             <option th:each="calle : ${listaCalles}" th:value="${calle.idCalle}" th:text="${calle.nombreCalle}"></option>
           </select>
         </div>
-        <div class="col-md-4">
-          <label for="numeroCasa" class="form-label">Número (Ext/Int)</label>
-          <input type="text" th:field="*{numeroCasa}" class="form-control" id="numeroCasa" placeholder="Ej. 12-B o S/N" required>
+        <div class="col-md-3">
+          <label for="numeroExterior" class="form-label">N° Exterior</label>
+          <input type="text" th:field="*{numeroExterior}" class="form-control" id="numeroExterior" placeholder="Ej. 12" required>
+        </div>
+        <div class="col-md-3">
+          <label for="numeroInterior" class="form-label">N° Interior</label>
+          <input type="text" th:field="*{numeroInterior}" class="form-control" id="numeroInterior" placeholder="Ej. B (Opcional)">
         </div>
       </div>
-
       <div class="row g-3 mb-4">
         <div class="col-md-4">
           <label for="codigoPostal" class="form-label">Código Postal</label>
@@ -87,9 +95,7 @@
           <label for="idServicio" class="form-label">Tipo de Servicio</label>
           <select th:field="*{idServicio}" class="form-select" id="idServicio" required>
             <option value="">Servicio...</option>
-            <option value="1">Hogar</option>
-            <option value="2">Empresarial</option>
-            <option value="3">Institucional</option>
+            <option th:each="servicio : ${listaServicios}" th:value="${servicio.idServicio}" th:text="${servicio.nombreServicio}"></option>
           </select>
         </div>
         <div class="col-md-4">

@@ -1,59 +1,117 @@
 <!DOCTYPE html>
+
 <html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Estado de Cuenta - Texcalac</title>
+
+    <title>Estado de Cuenta</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
     <style>
+
         :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+
         body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+
         .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+
         .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+
         .logo-container img { max-height: 70px; }
+
         .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+
         .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
+
         .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
+
         .btn-back:hover { color: white; transform: scale(1.1); }
+
         .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 10px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; }
+
         .btn-blanco:hover { background-color: #f0f0f0; transform: scale(1.02); }
 
+
+
         .fila-info { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; font-size: 1.05rem; }
+
         .label-gris { color: rgba(255,255,255,0.7); font-weight: bold; }
+
     </style>
+
 </head>
+
 <body class="d-flex flex-column h-100">
 
+
+
 <header class="franja-vino w-100">
+
     <div class="logo-container">
+
         <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
+
     </div>
+
     <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
+
 </header>
 
+
+
 <main class="container d-flex flex-column align-items-center justify-content-center flex-grow-1 my-5">
+
     <div class="caja-oscura" style="max-width: 550px; width: 100%;" th:if="${cuenta != null}">
+
         <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
+
+
 
         <h2 class="fw-bold mb-4 text-center border-bottom pb-2">Estado de Cuenta</h2>
 
+
+
         <div class="fila-info"><span class="label-gris">Titular:</span> <span class="text-end" th:text="${cuenta.nombreTitular}"></span></div>
+
         <div class="fila-info"><span class="label-gris">Domicilio:</span> <span class="text-end" th:text="${cuenta.domicilioCompleto}"></span></div>
+
         <div class="fila-info"><span class="label-gris">C.P:</span> <span class="text-end" th:text="${cuenta.codigoPostal}"></span></div>
+
         <div class="fila-info"><span class="label-gris">Servicio:</span> <span class="text-end" th:text="${cuenta.tipoServicio}"></span></div>
+
         <div class="fila-info"><span class="label-gris">INAPAM:</span> <span class="text-end" th:text="${cuenta.descuentoInapamStr}"></span></div>
+
         <div class="fila-info"><span class="label-gris">Último Pago:</span> <span class="text-end" th:text="${cuenta.ultimaFechaPago != null ? #temporals.format(cuenta.ultimaFechaPago, 'dd/MM/yyyy') : 'Sin registros'}"></span></div>
 
+
+
         <div class="fila-info border-0 mt-3 align-items-center">
+
             <span class="label-gris fs-4 text-white">Tarifa del servicio:</span>
+
             <span class="fs-3 fw-bold text-warning" th:text="${'$' + cuenta.montoTotalDeuda}"></span>
+
         </div>
 
+
+
         <div class="mt-4 d-flex gap-3">
+
             <a th:href="@{/historial/{folio}(folio=${cuenta.folioTarjeta})}" class="btn-blanco w-50 shadow-sm text-center" style="text-decoration:none; line-height: 1.5;">Historial de Pagos</a>
+
             <a href="/consultar" class="btn btn-outline-light w-50 fw-bold d-flex align-items-center justify-content-center">Nueva Búsqueda</a>
+
         </div>
+
     </div>
+
 </main>
+
 </body>
+
 </html>
