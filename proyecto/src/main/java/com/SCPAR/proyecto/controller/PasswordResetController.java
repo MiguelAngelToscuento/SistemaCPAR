@@ -5,6 +5,7 @@ import com.SCPAR.proyecto.model.PasswordResetToken;
 import com.SCPAR.proyecto.repository.AdministradorRepository;
 import com.SCPAR.proyecto.repository.PasswordResetTokenRepository;
 import com.SCPAR.proyecto.service.EmailService;
+import jakarta.servlet.http.HttpServletRequest; // <-- IMPORTANTE IMPORTAR ESTO
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder; // <-- IMPORTANTE IMPORTAR ESTO
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -33,16 +35,15 @@ public class PasswordResetController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // 1. Mostrar la pantalla para introducir el correo
     @GetMapping("/olvide-password")
     public String mostrarFormularioOlvidePassword() {
         return "olvide-password";
     }
 
-    // 2. Procesar el formulario cuando le dan a "Enviar enlace"
+    // Le agregamos HttpServletRequest para saber de dónde viene la petición
     @PostMapping("/olvide-password")
     @Transactional
-    public String procesarOlvidePassword(@RequestParam("correo") String correo, RedirectAttributes redirectAttributes) {
+    public String procesarOlvidePassword(@RequestParam("correo") String correo, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         Administrador admin = administradorRepository.findByCorreo(correo);
 
@@ -51,7 +52,6 @@ public class PasswordResetController {
             return "redirect:/olvide-password";
         }
 
-        // CORREGIDO: Usando getId() y deleteByAdministrador_Id()
         tokenRepository.deleteByAdministrador_Id(admin.getId());
 
         String tokenString = UUID.randomUUID().toString();
@@ -63,7 +63,16 @@ public class PasswordResetController {
 
         tokenRepository.save(miToken);
 
-        String enlace = "http://localhost:8080/restablecer-password?token=" + tokenString;
+        // ==========================================
+        // AQUÍ ESTÁ LA MAGIA DE LA URL DINÁMICA
+        // ==========================================
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .build()
+                .toUriString();
+
+        String enlace = baseUrl + "/reestablecer-password?token=" + tokenString;
+        // ==========================================
 
         try {
             emailService.enviarCorreoRecuperacion(admin.getCorreo(), enlace);
@@ -75,8 +84,7 @@ public class PasswordResetController {
         return "redirect:/olvide-password";
     }
 
-    // 3. Atrapa el clic del usuario cuando abre su correo
-    @GetMapping("/restablecer-password")
+    @GetMapping("/reestablecer-password")
     public String mostrarFormularioRestablecer(@RequestParam("token") String token, Model model, RedirectAttributes redirectAttributes) {
 
         PasswordResetToken miToken = tokenRepository.findByToken(token).orElse(null);
@@ -87,11 +95,10 @@ public class PasswordResetController {
         }
 
         model.addAttribute("token", token);
-        return "reestablecer-password";
+        return "reestablecer-password"; // <-- Corregido el nombre del archivo HTML
     }
 
-    // 4. Procesa la contraseña nueva y la guarda en la BD
-    @PostMapping("/restablecer-password")
+    @PostMapping("/reestablecer-password")
     @Transactional
     public String procesarNuevaPassword(@RequestParam("token") String token,
                                         @RequestParam("password") String password,
