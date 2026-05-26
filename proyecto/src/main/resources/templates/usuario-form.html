@@ -8,19 +8,19 @@
   <style>
     :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
     body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
-    .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 70px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
     .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
-    .logo-container img { max-height: 70px; }
-    .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+    .logo-container img { max-height: 55px; }
+    .header-title { color: white; font-size: 1.2rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
 
-    .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
+    .caja-oscura { background-color: var(--color-vino); color: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); position: relative; }
     .btn-back { position: absolute; top: 15px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.5rem; text-decoration: none; transition: 0.2s; line-height: 1; }
     .btn-back:hover { color: white; transform: scale(1.1); }
-    .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 12px 40px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; }
+    .btn-blanco { background-color: white; color: var(--color-vino); border: 2px solid white; transition: all 0.3s; padding: 10px 30px; border-radius: 8px; font-weight: bold; font-size: 1.05rem; }
     .btn-blanco:hover { background-color: #f0f0f0; transform: scale(1.02); }
 
-    .form-label { font-weight: bold; font-size: 0.95rem; margin-bottom: 0.3rem; color: rgba(255, 255, 255, 0.9); }
-    .form-control, .form-select { border-radius: 8px; border: none; padding: 0.6rem 1rem; }
+    .form-label { font-weight: bold; font-size: 0.9rem; margin-bottom: 0.2rem; color: rgba(255, 255, 255, 0.9); }
+    .form-control, .form-select { border-radius: 8px; border: none; padding: 0.4rem 0.8rem; font-size: 0.95rem; }
   </style>
 </head>
 <body class="d-flex flex-column h-100">
@@ -32,29 +32,34 @@
   <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
 </header>
 
-<main class="container d-flex flex-column align-items-center justify-content-center flex-grow-1 my-5">
-  <form th:action="@{/usuarios/guardar}" th:object="${registroDTO}" method="post" style="max-width: 850px; width: 100%;">
+<main class="container d-flex flex-column align-items-center justify-content-center flex-grow-1 my-3">
+  <form th:action="${esEdicion != null && esEdicion} ? @{/usuarios/actualizar} : @{/usuarios/guardar}" 
+        method="post" th:object="${registroDTO}" style="max-width: 850px; width: 100%;">
+    
     <div class="caja-oscura">
       <a th:href="@{/administrador/menu}" class="btn-back" title="Volver al menú">←</a>
 
-      <h2 class="fw-bold mb-4 text-center border-bottom pb-3">Registro de Nuevo Usuario</h2>
+      <h2 class="fw-bold mb-3 border-bottom pb-2 text-center fs-4" 
+          th:text="${esEdicion != null && esEdicion} ? 'Editar Cliente' : 'Registro de Nuevo Usuario'">
+      </h2>
 
-      <div th:if="${mensajeError}" class="alert alert-danger p-2 mb-4 text-center shadow-sm" role="alert" style="font-size: 0.95rem;">
+      <div th:if="${mensajeError}" class="alert alert-danger p-2 mb-3 text-center shadow-sm" role="alert" style="font-size: 0.9rem;">
         <strong class="d-block">¡Atención!</strong>
         <span th:text="${mensajeError}">Error</span>
       </div>
 
-      <div class="row g-3 mb-4 p-4 rounded text-center mx-auto" style="background-color: rgba(255,255,255,0.1); max-width: 500px;">
-        <label for="folioTarjeta" class="form-label fs-5 text-warning mb-0">Folio de la Tarjeta</label>
+      <div class="row g-2 mb-3 p-3 rounded text-center mx-auto" style="background-color: rgba(255,255,255,0.1); max-width: 500px;">
+        <label for="folioTarjeta" class="form-label fs-6 text-warning mb-0">Folio de la Tarjeta</label>
 
-        <input type="text" th:field="*{folioTarjeta}" class="form-control form-control-lg text-center fw-bold fs-3 mt-2"
+        <input type="text" th:field="*{folioTarjeta}" class="form-control text-center fw-bold fs-4 mt-1"
                id="folioTarjeta" placeholder="Ej. pin-0065"
+               th:readonly="${esEdicion != null && esEdicion}"
                pattern="[A-Za-z0-9\-]+"
                title="El folio debe contener letras, un guion y números (Ejemplo: pin-0065 o TEX-1234)"
                required autofocus>
-      </div>
-
-      <div class="row g-3 mb-3">
+      </div> 
+      
+      <div class="row g-2 mb-2">
         <div class="col-md-4">
           <label for="nombres" class="form-label">Nombres</label>
           <input type="text" th:field="*{nombres}" class="form-control" id="nombres" placeholder="Ej. Juan Carlos" required>
@@ -69,7 +74,7 @@
         </div>
       </div>
 
-      <div class="row g-3 mb-3">
+      <div class="row g-2 mb-2">
         <div class="col-md-6">
           <label for="idCalle" class="form-label">Calle</label>
           <select th:field="*{idCalle}" class="form-select" id="idCalle" required>
@@ -86,7 +91,8 @@
           <input type="text" th:field="*{numeroInterior}" class="form-control" id="numeroInterior" placeholder="Ej. B (Opcional)">
         </div>
       </div>
-      <div class="row g-3 mb-4">
+      
+      <div class="row g-2 mb-3">
         <div class="col-md-4">
           <label for="codigoPostal" class="form-label">Código Postal</label>
           <input type="text" th:field="*{codigoPostal}" class="form-control" id="codigoPostal" placeholder="Ej. 90402" required>
@@ -104,19 +110,21 @@
         </div>
       </div>
 
-      <div class="row g-3 mt-2 mb-4">
-        <div class="col-12 bg-white rounded p-3 d-flex align-items-center justify-content-center shadow-sm">
+      <div class="row g-2 mt-1 mb-3">
+        <div class="col-12 bg-white rounded p-2 d-flex align-items-center justify-content-center shadow-sm">
           <div class="form-check mb-0 d-flex align-items-center">
-            <input class="form-check-input border-secondary me-2" type="checkbox" th:field="*{descuentoInapam}" id="descuentoInapam" style="transform: scale(1.3);">
-            <label class="form-check-label text-dark fw-bold" for="descuentoInapam" style="font-size: 1.05rem;">
+            <input class="form-check-input border-secondary me-2" type="checkbox" th:field="*{descuentoInapam}" id="descuentoInapam" style="transform: scale(1.2);">
+            <label class="form-check-label text-dark fw-bold" for="descuentoInapam" style="font-size: 0.95rem;">
               Aplicar Descuento (INAPAM, Jubilado, Pensionado)
             </label>
           </div>
         </div>
       </div>
 
-      <div class="text-center mt-4">
-        <button class="btn-blanco shadow-sm w-100" style="max-width: 400px;" type="submit">Registrar Usuario</button>
+      <div class="text-center mt-3">
+        <button class="btn-blanco shadow-sm w-100" style="max-width: 400px;" type="submit"
+                th:text="${esEdicion != null && esEdicion} ? 'Guardar Cambios' : 'Registrar Usuario'">
+        </button>
       </div>
     </div>
   </form>

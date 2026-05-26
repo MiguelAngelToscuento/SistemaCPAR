@@ -1,17 +1,19 @@
 package com.SCPAR.proyecto.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service; // <-- NUEVO
+
 import com.SCPAR.proyecto.dto.RegistroUsuarioDTO;
 import com.SCPAR.proyecto.model.CatCalle;
 import com.SCPAR.proyecto.model.CatTipoServicio; // <-- NUEVO
 import com.SCPAR.proyecto.model.CuentaServicio;
 import com.SCPAR.proyecto.repository.CatCalleRepository;
-import com.SCPAR.proyecto.repository.CatTipoServicioRepository; // <-- NUEVO
+import com.SCPAR.proyecto.repository.CatTipoServicioRepository;
 import com.SCPAR.proyecto.repository.CuentaServicioRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import jakarta.transaction.Transactional;
 
 @Service
 public class RegistroUsuarioService {
@@ -57,4 +59,29 @@ public class RegistroUsuarioService {
 
         cuentaServicioRepository.save(nuevaCuenta);
     }
+
+    @Transactional
+    public void actualizarUsuario(RegistroUsuarioDTO dto) {
+        CuentaServicio cuentaExistente = cuentaServicioRepository.findById(dto.getFolioTarjeta())
+                .orElseThrow(() -> new RuntimeException("La cuenta no existe"));
+
+        cuentaExistente.setNombres(dto.getNombres());
+        cuentaExistente.setApellidoPaterno(dto.getApellidoPaterno());
+        cuentaExistente.setApellidoMaterno(dto.getApellidoMaterno());
+        // Si no quieres que cambien la fecha de registro original, puedes quitar la siguiente línea
+        cuentaExistente.setFechaRegistro(dto.getFechaRegistro());
+
+        CatCalle calleSeleccionada = catCalleRepository.findById(dto.getIdCalle()).orElse(null);
+        cuentaExistente.setCalle(calleSeleccionada);
+
+        cuentaExistente.setNumeroExterior(dto.getNumeroExterior());
+        cuentaExistente.setNumeroInterior(dto.getNumeroInterior());
+        cuentaExistente.setCodigoPostal(dto.getCodigoPostal());
+        cuentaExistente.setIdServicio(dto.getIdServicio());
+        cuentaExistente.setDescuentoInapam(dto.getDescuentoInapam());
+
+        // Se guarda la actualización
+        cuentaServicioRepository.save(cuentaExistente);
+    }
+
 }
