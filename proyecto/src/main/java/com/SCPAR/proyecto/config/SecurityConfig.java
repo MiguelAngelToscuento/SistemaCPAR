@@ -16,7 +16,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 1. Pantallas públicas (Cualquiera puede entrar sin iniciar sesión)
                         // AQUÍ SE AGREGARON LAS RUTAS DE RECUPERACIÓN Y EL LOGO
-                        .requestMatchers("/", "/administrador/nuevo", "/administrador", "/css/**", "/img/**", "/static", "/LOGO.png", "/olvide-password", "/restablecer-password").permitAll()
+                        .requestMatchers("/", "/administrador/nuevo", "/administrador", "/css/**", "/img/**", "/static", "/LOGO.png", "/olvide-password", "/reestablecer-password").permitAll()
 
                         // 2. Cualquier otra pantalla estará bloqueada y pedirá login
                         .anyRequest().authenticated()

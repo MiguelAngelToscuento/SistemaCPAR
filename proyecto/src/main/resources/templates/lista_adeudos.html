@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lista de Adeudos - Texcalac</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <style>
+        :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
+        body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
+        
+        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; justify-content: space-between; padding-right: 30px; height: 85px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-container img { max-height: 70px; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+    </style>
+</head>
+<body class="d-flex flex-column h-100">
+
+<header class="franja-vino w-100">
+    <div class="d-flex align-items-center h-100">
+        <div class="logo-container">
+            <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
+        </div>
+        <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
+    </div>
+    <div>
+        <a th:href="@{/administrador/menu}" class="btn btn-outline-light fw-bold">Regresar al Menú</a>
+    </div>
+</header>
+
+<main class="container flex-grow-1 my-5 d-flex flex-column align-items-center">
+    <div class="card shadow-sm border border-secondary-subtle w-100" style="max-width: 1000px; border-radius: 12px; overflow: hidden;">
+        <div class="card-header text-white text-center fw-bold py-3" style="background-color: var(--color-vino); font-size: 1.2rem;">
+            Cuentas con Adeudos Activos
+        </div>
+        <div class="card-body p-4 bg-white">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle border text-center m-0">
+                    <thead class="table-dark" style="--bs-table-bg: var(--color-vino);">
+                        <tr>
+                            <th style="padding: 12px;">Folio Tarjeta</th>
+                            <th style="padding: 12px;" class="text-start">Nombre del Contribuyente</th>
+                            <th style="padding: 12px;">Último Mes Pagado</th>
+                            <th style="padding: 12px;">Meses de Atraso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(listaDeudores)}">
+                            <td colspan="4" class="text-muted py-4 fw-bold">¡Excelente! No hay cuentas con adeudos pendientes en este momento. ✨</td>
+                        </tr>
+                        
+                        <tr th:each="deudor : ${listaDeudores}">
+                            <td class="fw-bold" th:text="${deudor.folio}">--</td>
+                            <td class="text-start" th:text="${deudor.nombre}">--</td>
+                            <td th:text="${deudor.ultimo_mes_pagado != null ? deudor.ultimo_mes_pagado : 'Nunca ha pagado'}">--</td>
+                            <td>
+                                <span class="badge bg-danger px-3 py-2 fs-6 fw-bold" th:text="${deudor.meses_atraso}">0</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

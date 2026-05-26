@@ -63,13 +63,15 @@
             <a th:href="@{/configuracion}" class="menu-btn" style="background-color: #2b060b;">Configuración de Catálogos</a>
         </div>
         <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
-            <div class="info-card">
-                <div class="info-header">Información del Día</div>
-                <div class="info-body">
-                    <p>Último Pago: <span th:text="${ultimoPagoFecha}">--</span>, <span th:text="${ultimoPagoMonto}">--</span></p>
-                    <p>Adeudos Activos: <span th:text="${adeudosActivos}">--</span> cuentas</p>
+            <a th:href="@{/pagos/adeudos/lista}" class="text-decoration-none w-100" style="max-width: 450px;">
+                <div class="info-card" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="info-header">Información del Día</div>
+                    <div class="info-body">
+                        <p>Último Pago: <span th:text="${ultimoPagoFecha}">--</span>, <span th:text="${ultimoPagoMonto}">--</span></p>
+                        <p>Adeudos Activos: <span th:text="${adeudosActivos}">--</span>deudor</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </main>
