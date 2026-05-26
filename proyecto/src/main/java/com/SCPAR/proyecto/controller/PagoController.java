@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,5 +152,17 @@ public class PagoController {
 
         model.addAttribute("pago", pago);
         return "recibo-pago"; // Llama a tu nuevo HTML
+    }
+
+    @GetMapping("/adeudos/lista")
+    public String verListaDeudores(Model model) {
+        // Jalamos la lista de la base de datos usando el repositorio
+        List<Map<String, Object>> deudores = pagoRepository.findCuentasConAdeudo();
+        
+        // Se la pasamos a la nueva vista de Thymeleaf
+        model.addAttribute("listaDeudores", deudores);
+        
+        // Buscamos el archivo llamado lista_adeudos.html en la carpeta templates
+        return "lista_adeudos"; 
     }
 }
