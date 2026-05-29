@@ -4,81 +4,131 @@
     <meta charset="UTF-8">
     <title>Recibo de Pago</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; margin: 0; padding: 20px; color: #333; }
 
-        /* LA CAJA DEL RECIBO (Simulación de papel) */
+        /* LA CAJA DEL RECIBO */
         .recibo-container {
             background-color: white;
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 40px;
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-
-            /* --- MARCA DE AGUA DEL LOGO DETRÁS --- */
+            padding: 50px 50px 30px 50px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             position: relative;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            overflow: hidden;
         }
 
-        /* --- ESTILOS DE LA MARCA DE AGUA --- */
+        /* --- MARCA DE AGUA --- */
         .recibo-container::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('/LOGO.png');
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 550px;
+            height: 550px;
+            background-image: url('/LOGOGRIS.png');
             background-repeat: no-repeat;
-            background-position: center center;
-            background-size: 400px;
-            opacity: 0.10;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.35;
             z-index: 0;
+            pointer-events: none;
         }
 
-        /* --- ASEGURAR QUE EL CONTENIDO ESTÉ FRENTE A LA MARCA DE AGUA --- */
+        /* CONTENEDOR PRINCIPAL */
         .recibo-content {
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 700px;
+            justify-content: space-between;
         }
 
         /* ENCABEZADO INSTITUCIONAL */
-        .header { text-align: center; border-bottom: 2px solid #4a0d16; padding-bottom: 20px; margin-bottom: 20px; }
-        .header img { max-height: 80px; margin-bottom: 10px; }
-        .header h1 { margin: 0; font-size: 1.2rem; color: #4a0d16; text-transform: uppercase; }
-        .header h2 { margin: 5px 0 0; font-size: 1rem; color: #555; }
+        .header {
+            border-bottom: 3px solid #4a0d16;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+        .header img {
+            max-height: 110px;
+        }
+        .header-text {
+            text-align: left;
+        }
+        .header h1 { margin: 0; font-size: 1.4rem; color: #4a0d16; text-transform: uppercase; letter-spacing: 1px; }
+        .header h2 { margin: 5px 0 0; font-size: 1.1rem; color: #555; font-weight: 400; }
+        .header p { margin: 8px 0 0; font-size: 0.9rem; font-weight: bold; color: #777; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* DATOS DEL RECIBO */
-        .datos-fila { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
-        .datos-fila strong { color: #4a0d16; }
+        /* CUADRÍCULA DE DATOS */
+        .datos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px 30px;
+            margin-bottom: 35px;
+        }
+        .dato-item { font-size: 0.95rem; }
+        .dato-item strong { color: #4a0d16; display: inline-block; margin-right: 8px; }
+        .text-right { text-align: right; }
+        .inapam-activo { color: #198754; font-weight: bold; }
 
-        .caja-resaltada { background-color: #f9f9f9; padding: 15px; border: 1px dashed #ccc; margin: 20px 0; text-align: center; }
-        .total { font-size: 1.5rem; font-weight: bold; color: #4a0d16; margin: 10px 0 0; }
+        /* SECCIÓN DE TOTAL (TOTALMENTE TRANSPARENTE Y SIN LÍNEAS) */
+        .caja-resaltada {
+            background: transparent;
+            border: none; /* Se eliminaron las líneas superior e inferior */
+            padding: 25px 10px;
+            margin: 20px 0 60px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .concepto-info { text-align: left; }
 
-        /* TABLA DE INFO PAGO */
-        .info-pago { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .info-pago th { background-color: #4a0d16; color: white; padding: 10px; text-align: left; }
-        .info-pago td { border-bottom: 1px solid #ddd; padding: 10px; }
+        /* TEXTOS MÁS OSCUROS PARA QUE RESALTEN SOBRE EL LOGO */
+        .concepto-titulo { font-size: 1.05rem; color: #222; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .concepto-detalle { font-size: 1.2rem; font-weight: bold; color: #000; }
+
+        .total-info { text-align: right; }
+        .total-texto { font-size: 1.05rem; color: #222; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
+        .total-monto { font-size: 2.2rem; font-weight: bold; color: #4a0d16; line-height: 1; }
 
         /* FIRMAS */
-        .firmas { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; }
-        .firma-linea { border-top: 1px solid #333; width: 45%; padding-top: 5px; font-size: 0.85rem; }
+        .firmas { display: flex; justify-content: space-between; margin-top: auto; margin-bottom: 40px; text-align: center; }
+        .firma-linea { border-top: 1px solid #333; width: 40%; padding-top: 8px; font-size: 0.85rem; color: #333; font-weight: bold; }
 
-        /* BOTONES DE ACCIÓN (SE OCULTAN AL IMPRIMIR) */
-        .acciones { text-align: center; margin-top: 30px; }
-        .btn { padding: 10px 20px; font-size: 1rem; cursor: pointer; border: none; border-radius: 5px; color: white; font-weight: bold; text-decoration: none; margin: 0 10px; }
-        .btn-imprimir { background-color: #198754; }
-        .btn-volver { background-color: #4a0d16; }
-
-        /* --- LA MAGIA DEL CSS: ESTO SOLO APLICA A LA IMPRESORA --- */
-        @page {
-            margin: 0;
+        /* PIE DE PÁGINA INSTITUCIONAL */
+        .footer-institucional {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.5;
         }
 
+        /* BOTONES DE ACCIÓN */
+        .acciones { text-align: center; margin-top: 40px; }
+        .btn { padding: 12px 25px; font-size: 1rem; cursor: pointer; border: none; border-radius: 5px; color: white; font-weight: bold; text-decoration: none; margin: 0 10px; transition: 0.3s; }
+        .btn-imprimir { background-color: #198754; box-shadow: 0 4px 6px rgba(25, 135, 84, 0.3); }
+        .btn-imprimir:hover { background-color: #157347; }
+        .btn-volver { background-color: #4a0d16; box-shadow: 0 4px 6px rgba(74, 13, 22, 0.3); }
+        .btn-volver:hover { background-color: #31080e; }
+
+        /* PARA IMPRESIÓN */
+        @page { margin: 0; }
         @media print {
             body { background-color: white; padding: 1.5cm; }
-            .recibo-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            .recibo-container { box-shadow: none; border: none; padding: 0; max-width: 100%; border-radius: 0; }
             .acciones { display: none !important; }
         }
     </style>
@@ -87,42 +137,81 @@
 
 <div class="recibo-container">
     <div class="recibo-content">
-        <div class="header">
-            <h1>Presidencia de Comunidad</h1>
-            <h2>Santa María Texcalac</h2>
-            <p style="margin: 5px 0 0; font-size: 0.9rem;">Comprobante de Pago de Servicio</p>
+
+        <div>
+            <!-- ENCABEZADO -->
+            <div class="header">
+                <div class="header-content">
+                    <img src="/LOGO.png" alt="Logo Santa María Texcalac">
+                    <div class="header-text">
+                        <h1>Presidencia de Comunidad</h1>
+                        <h2>Santa María Texcalac</h2>
+                        <p>Comprobante de Pago de Servicio</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATOS DEL RECIBO -->
+            <div class="datos-grid">
+                <div class="dato-item">
+                    <strong>Folio del Recibo:</strong> <span th:text="${pago.idPago}">000</span>
+                </div>
+                <div class="dato-item text-right">
+                    <strong>Fecha:</strong> <span th:text="${#temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm')}">--/--/----</span>
+                </div>
+
+                <div class="dato-item">
+                    <strong>Folio de Tarjeta:</strong> <span th:text="${pago.cuenta.folioTarjeta}">---</span>
+                </div>
+                <div class="dato-item text-right">
+                    <strong>Tarifa Mensual:</strong> $<span th:text="${tarifaServicio}">0.00</span>
+                </div>
+
+                <div class="dato-item">
+                    <strong>Titular:</strong> <span th:text="${pago.cuenta.nombres + ' ' + pago.cuenta.apellidoPaterno + ' ' + pago.cuenta.apellidoMaterno}">---</span>
+                </div>
+                <div class="dato-item text-right">
+                    <strong>Desc. INAPAM:</strong>
+                    <span th:classappend="${pago.cuenta.descuentoInapam != null and pago.cuenta.descuentoInapam} ? 'inapam-activo' : ''"
+                          th:text="${pago.cuenta.descuentoInapam != null and pago.cuenta.descuentoInapam ? 'Aplicado' : 'No aplica'}">
+                        ---
+                    </span>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DE TOTAL SIN RAYAS Y CON TEXTO OSCURO -->
+            <div class="caja-resaltada">
+                <div class="concepto-info">
+                    <div class="concepto-titulo">Concepto de Pago</div>
+                    <div class="concepto-detalle" th:text="${pago.periodoPagado}">---</div>
+                </div>
+                <div class="total-info">
+                    <div class="total-texto">Total Pagado</div>
+                    <div class="total-monto" th:text="'$' + ${pago.montoTotal}">$0.00</div>
+                </div>
+            </div>
         </div>
 
-        <div class="datos-fila">
-            <span><strong>Folio del Recibo:</strong> <span th:text="${pago.idPago}">000</span></span>
-            <span><strong>Fecha:</strong> <span th:text="${#temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm')}">--/--/----</span></span>
+        <!-- SECCIÓN INFERIOR -->
+        <div>
+            <div class="firmas">
+                <div class="firma-linea">Sello de la Presidencia</div>
+                <div class="firma-linea">Firma de Conformidad</div>
+            </div>
+
+            <div class="footer-institucional">
+                <strong>Presidencia de Comunidad de Santa María Texcalac</strong><br>
+                Plaza de la Constitución S/N, Santa María Texcalac, Tlax.<br>
+                Teléfono:
+            </div>
         </div>
 
-        <div class="datos-fila mt-2">
-            <span><strong>Folio de Tarjeta:</strong> <span th:text="${pago.cuenta.folioTarjeta}">---</span></span>
-        </div>
-        <div class="datos-fila">
-            <span><strong>Titular:</strong> <span th:text="${pago.cuenta.nombres + ' ' + pago.cuenta.apellidoPaterno + ' ' + pago.cuenta.apellidoMaterno}">---</span></span>
-        </div>
-
-        <div class="caja-resaltada">
-            <div style="font-size: 1.1rem;">Concepto de Pago</div>
-            <div style="font-size: 1.2rem; margin-top: 5px;" th:text="${pago.periodoPagado}">---</div>
-            <div class="total" th:text="'Total Pagado: $' + ${pago.montoTotal}">$0.00</div>
-        </div>
-
-
-
-        <div class="firmas">
-            <div class="firma-linea">Sello de la Presidencia</div>
-            <div class="firma-linea">Firma de Conformidad</div>
-        </div>
     </div>
 </div>
 
 <div class="acciones">
-    <button class="btn btn-imprimir" onclick="window.print()">Imprimir Recibo</button>
-    <a th:href="@{/administrador/menu}" class="btn btn-volver">Volver al Menú</a>
+    <button class="btn btn-imprimir" onclick="window.print()">🖨️ Imprimir Recibo</button>
+    <a th:href="@{/administrador/menu}" class="btn btn-volver">⬅️ Volver al Menú</a>
 </div>
 
 </body>

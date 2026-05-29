@@ -8,7 +8,11 @@
     <style>
         :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
         body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
-        
+
+        /* MAGIA VISUAL: Efecto de botón al pasar el mouse sobre la fila */
+        .fila-interactiva { cursor: pointer; transition: background-color 0.2s; }
+        .fila-interactiva:hover { background-color: #f0e6e7 !important; }
+
         .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; justify-content: space-between; padding-right: 30px; height: 85px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
         .logo-container img { max-height: 70px; }
@@ -36,28 +40,31 @@
         </div>
         <div class="card-body p-4 bg-white">
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle border text-center m-0">
+                <table class="table table-striped align-middle border text-center m-0">
                     <thead class="table-dark" style="--bs-table-bg: var(--color-vino);">
-                        <tr>
-                            <th style="padding: 12px;">Folio Tarjeta</th>
-                            <th style="padding: 12px;" class="text-start">Nombre del Contribuyente</th>
-                            <th style="padding: 12px;">Último Mes Pagado</th>
-                            <th style="padding: 12px;">Meses de Atraso</th>
-                        </tr>
+                    <tr>
+                        <th style="padding: 12px;">Folio Tarjeta</th>
+                        <th style="padding: 12px;" class="text-start">Nombre del Contribuyente</th>
+                        <th style="padding: 12px;">Último Mes Pagado</th>
+                        <th style="padding: 12px;">Meses de Atraso</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr th:if="${#lists.isEmpty(listaDeudores)}">
-                            <td colspan="4" class="text-muted py-4 fw-bold">¡Excelente! No hay cuentas con adeudos pendientes en este momento. ✨</td>
-                        </tr>
-                        
-                        <tr th:each="deudor : ${listaDeudores}">
-                            <td class="fw-bold" th:text="${deudor.folio}">--</td>
-                            <td class="text-start" th:text="${deudor.nombre}">--</td>
-                            <td th:text="${deudor.ultimo_mes_pagado != null ? deudor.ultimo_mes_pagado : 'Nunca ha pagado'}">--</td>
-                            <td>
-                                <span class="badge bg-danger px-3 py-2 fs-6 fw-bold" th:text="${deudor.meses_atraso}">0</span>
-                            </td>
-                        </tr>
+                    <tr th:if="${#lists.isEmpty(listaDeudores)}">
+                        <td colspan="4" class="text-muted py-4 fw-bold">¡Excelente! No hay cuentas con adeudos pendientes en este momento. ✨</td>
+                    </tr>
+
+                    <tr th:each="deudor : ${listaDeudores}"
+                        class="fila-interactiva"
+                        th:onclick="|window.location.href='@{/consultar(folio=${deudor.folio})}'|">
+
+                        <td class="fw-bold" th:text="${deudor.folio}">--</td>
+                        <td class="text-start" th:text="${deudor.nombre}">--</td>
+                        <td th:text="${deudor.ultimo_mes_pagado != null ? deudor.ultimo_mes_pagado : 'Nunca ha pagado'}">--</td>
+                        <td>
+                            <span class="badge bg-danger px-3 py-2 fs-6 fw-bold" th:text="${deudor.meses_atraso}">0</span>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

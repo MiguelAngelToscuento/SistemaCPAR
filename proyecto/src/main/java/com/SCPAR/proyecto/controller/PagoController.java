@@ -150,8 +150,15 @@ public class PagoController {
             return "redirect:/administrador/menu";
         }
 
+        // Buscar el servicio usando el idServicio de la cuenta y extraer la tarifa
+        CatTipoServicio servicio = catTipoServicioRepository.findById(pago.getCuenta().getIdServicio()).orElse(null);
+        BigDecimal tarifaServicio = (servicio != null) ? servicio.getTarifa() : BigDecimal.ZERO;
+
+        // Agregar la tarifa al modelo para usarla en la vista
         model.addAttribute("pago", pago);
-        return "recibo-pago"; // Llama a tu nuevo HTML
+        model.addAttribute("tarifaServicio", tarifaServicio);
+
+        return "recibo-pago";
     }
 
     @GetMapping("/adeudos/lista")
