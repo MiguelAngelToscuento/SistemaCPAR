@@ -23,13 +23,30 @@ public class EstadoCuentaController {
     @Autowired
     private PagoRepository pagoRepository;
 
+    // --- AQUÍ ESTÁ LA MAGIA ---
+    // Ahora recibe un folio opcional. Si viene de la tabla, entra aquí.
     @GetMapping("/consultar")
-    public String mostrarBuscador() {
+    public String mostrarBuscador(@RequestParam(value = "folio", required = false) String folio, Model model) {
+
+        // Si el folio NO es nulo y NO está vacío, buscamos la cuenta directo
+        if (folio != null && !folio.trim().isEmpty()) {
+            EstadoCuentaDTO datos = estadoCuentaService.obtenerDetalleEstado(folio);
+
+            if (datos != null) {
+                model.addAttribute("cuenta", datos);
+                return "estado_cuenta_vista"; // Salta directo al resultado
+            } else {
+                model.addAttribute("error", "El folio " + folio + " no existe en el sistema.");
+            }
+        }
+
+        // Si no mandaron folio (o si hubo error), mostramos el buscador normal
         return "buscar_folio";
     }
 
+    // Este es el que se usa cuando escriben en la cajita y le dan al botón buscar
     @PostMapping("/buscar")
-    public String procesarBusqueda(@RequestParam("folio") String folio, Model model) { // Cambiado a String
+    public String procesarBusqueda(@RequestParam("folio") String folio, Model model) {
         EstadoCuentaDTO datos = estadoCuentaService.obtenerDetalleEstado(folio);
 
         if (datos != null) {
@@ -42,7 +59,7 @@ public class EstadoCuentaController {
     }
 
     @GetMapping("/estado-cuenta/{folio}")
-    public String verEstadoDirecto(@PathVariable String folio, Model model) { // Cambiado a String
+    public String verEstadoDirecto(@PathVariable String folio, Model model) {
         EstadoCuentaDTO datos = estadoCuentaService.obtenerDetalleEstado(folio);
         if (datos != null) {
             model.addAttribute("cuenta", datos);
@@ -52,7 +69,7 @@ public class EstadoCuentaController {
     }
 
     @GetMapping("/historial/{folio}")
-    public String verHistorial(@PathVariable String folio, Model model) { // Cambiado a String
+    public String verHistorial(@PathVariable String folio, Model model) {
         List<Pago> pagos = pagoRepository.findByCuenta_FolioTarjetaOrderByFechaPagoDesc(folio);
 
         model.addAttribute("pagos", pagos);

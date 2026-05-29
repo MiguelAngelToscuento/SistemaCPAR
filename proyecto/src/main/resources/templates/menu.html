@@ -9,13 +9,84 @@
         :root { --color-vino: #4a0d16; --bg-claro: #fbfbfb; }
         body { background-color: var(--bg-claro); font-family: 'Segoe UI', sans-serif; }
 
-        /* Modificado para separar los elementos a los extremos y dar margen derecho */
-        .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; justify-content: space-between; padding-right: 30px; height: 85px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
-        .logo-container img { max-height: 70px; }
-        .header-title { color: white; font-size: 1.3rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
+        /* --- ENCABEZADO PRINCIPAL (COMPUTADORA) --- */
+        .franja-vino {
+            background-color: var(--color-vino);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 85px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-        .menu-btn { background-color: var(--color-vino); color: white; border-radius: 12px; border: none; width: 100%; max-width: 320px; min-height: 110px; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .header-left {
+            display: flex;
+            align-items: center;
+            align-self: stretch;
+            flex: 1;
+        }
+
+        .logo-container {
+            background-color: white;
+            padding: 5px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: stretch;
+        }
+        .logo-container img { max-height: 70px; }
+
+        .header-title {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-left: 20px;
+            margin-bottom: 0;
+            line-height: 1.2;
+        }
+
+        .header-right {
+            padding-right: 30px;
+        }
+
+        /* --- NUEVO DISEÑO PARA EL BOTÓN DE CONFIGURACIÓN --- */
+        .btn-config {
+            background-color: white;
+            color: var(--color-vino);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-config:hover {
+            background-color: #e9ecef;
+            color: var(--color-vino);
+            transform: scale(1.05);
+        }
+
+        /* --- BOTONES DEL MENÚ --- */
+        .menu-btn {
+            background-color: var(--color-vino);
+            color: white;
+            border-radius: 12px;
+            border: none;
+            width: 100%;
+            max-width: 320px;
+            min-height: 110px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            padding: 10px 20px;
+            line-height: 1.3;
+        }
         .menu-btn:hover { transform: scale(1.03); color: white; box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
 
         .info-card { background-color: white; border: 1px solid #d1d1d1; border-radius: 12px; overflow: hidden; width: 100%; max-width: 450px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
@@ -23,24 +94,67 @@
         .info-body { padding: 30px 20px; text-align: center; color: var(--color-vino); font-weight: 500; }
         .info-body p { margin-bottom: 12px; font-size: 1.1rem; }
         .info-body p:last-child { margin-bottom: 0; }
+
+        /* --- ADAPTACIÓN PERFECTA PARA CELULARES --- */
+        @media (max-width: 768px) {
+            .franja-vino {
+                flex-direction: column;
+                align-items: stretch;
+                height: auto; /* Permite que la barra crezca hacia abajo */
+                padding-bottom: 20px; /* Le da un "colchón" al botón para que no se salga */
+            }
+
+            .header-left {
+                width: 100%;
+            }
+
+            .logo-container {
+                padding: 10px 15px;
+            }
+            .logo-container img {
+                max-height: 55px;
+            }
+
+            .header-title {
+                font-size: 1.05rem;
+                margin: 0 10px;
+                padding: 12px 0;
+                text-align: center; /* Centramos el título en celular para que se vea simétrico */
+            }
+
+            .header-right {
+                padding-right: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                padding-top: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+        }
     </style>
 </head>
 <body class="d-flex flex-column h-100">
 
 <header class="franja-vino w-100">
-    <div class="d-flex align-items-center h-100">
+    <div class="header-left">
         <div class="logo-container">
             <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
         </div>
         <h1 class="header-title">Presidencia de Comunidad de Santa María Texcalac</h1>
     </div>
 
-    <div class="dropdown">
-        <button class="btn btn-outline-light dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="header-right dropdown">
+        <button class="btn-config dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Configuración
         </button>
         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-            <li><a class="dropdown-item" href="#">(Espacio para otra opción)</a></li>
+            <li>
+                <form th:action="@{/administrador/backup/manual}" method="post" style="margin: 0;">
+                    <button type="submit" class="dropdown-item fw-bold" style="color: #198754;">
+                        💾 Respaldar Base de Datos
+                    </button>
+                </form>
+            </li>
             <li><hr class="dropdown-divider"></li>
             <li>
                 <a class="dropdown-item text-danger fw-bold" th:href="@{/administrador/login}">Cerrar Sesión</a>
@@ -60,15 +174,30 @@
             <a th:href="@{/pagos/realizar}" class="menu-btn">Realizar Pago</a>
             <a th:href="@{/consultar}" class="menu-btn">Estado de cuenta</a>
             <a th:href="@{/usuarios/nuevo}" class="menu-btn">Registrar nuevo Usuario</a>
-            <a th:href="@{/configuracion}" class="menu-btn" style="background-color: #2b060b;">Configuración de Catálogos</a>
+            <a th:href="@{/configuracion}" class="menu-btn">Configuración de Catálogos</a>
         </div>
         <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
-            <a th:href="@{/pagos/adeudos/lista}" class="text-decoration-none w-100" style="max-width: 450px;">
-                <div class="info-card" style="transition: transform 0.2s; cursor: pointer;">
-                    <div class="info-header">Información del Día</div>
-                    <div class="info-body">
-                        <p>Último Pago: <span th:text="${ultimoPagoFecha}">--</span>, <span th:text="${ultimoPagoMonto}">--</span></p>
-                        <p>Adeudos Activos: <span th:text="${adeudosActivos}">--</span>deudor</p>
+            <a th:href="@{/pagos/adeudos/lista}" class="text-decoration-none w-100" style="max-width: 480px;">
+                <div class="info-card" style="transition: transform 0.2s; cursor: pointer; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                    <div class="info-header" style="background-color: var(--color-vino); color: white; text-align: center; padding: 12px; font-size: 1.05rem; font-weight: bold; letter-spacing: 0.5px;">
+                        Resumen del Sistema
+                    </div>
+                    <div class="info-body" style="padding: 35px 15px; background-color: white;">
+                        <div class="d-flex justify-content-evenly align-items-center">
+
+                            <div class="text-center">
+                                <div style="font-size: 3rem; font-weight: 800; color: var(--color-vino); line-height: 1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" th:text="${totalUsuarios}">--</div>
+                                <div style="font-size: 0.75rem; color: #6c757d; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 12px;">Usuarios<br>Registrados</div>
+                            </div>
+
+                            <div style="width: 2px; height: 70px; background-color: #f0e6e7; border-radius: 1px;"></div>
+
+                            <div class="text-center">
+                                <div style="font-size: 3rem; font-weight: 800; color: #dc3545; line-height: 1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" th:text="${adeudosActivos}">--</div>
+                                <div style="font-size: 0.75rem; color: #dc3545; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 12px;">Deudores<br>Activos</div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </a>
@@ -79,13 +208,9 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Seleccionamos todas las alertas que estén en la pantalla
         let alertas = document.querySelectorAll('.alert');
-
         alertas.forEach(function(alerta) {
-            // Programamos un temporizador de 3000 milisegundos (3 segundos)
             setTimeout(function() {
-                // Usamos la animación nativa de Bootstrap para cerrarla suavemente
                 let alertaBootstrap = new bootstrap.Alert(alerta);
                 alertaBootstrap.close();
             }, 3000);
