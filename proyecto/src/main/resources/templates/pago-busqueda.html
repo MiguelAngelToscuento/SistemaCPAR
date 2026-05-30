@@ -19,13 +19,11 @@
             margin: 0;
         }
 
-        /* CABECERA */
         .franja-vino { background-color: var(--color-vino); display: flex; align-items: center; height: 85px; padding: 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .logo-container { background-color: white; height: 100%; padding: 5px 20px; display: flex; align-items: center; justify-content: center; }
         .logo-container img { max-height: 70px; }
         .header-title { color: white; font-size: 1.2rem; font-weight: bold; margin-left: 30px; margin-bottom: 0; }
 
-        /* TARJETA PRINCIPAL */
         .caja-oscura {
             background-color: var(--color-vino);
             color: white;
@@ -39,20 +37,17 @@
         .btn-back { position: absolute; top: 20px; left: 20px; color: rgba(255, 255, 255, 0.7); font-size: 1.2rem; text-decoration: none; transition: 0.2s; }
         .btn-back:hover { color: white; }
 
-        /* INPUTS Y CAJAS INTERNAS */
         .form-label { font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem; color: white; }
         .form-control, .form-select { border-radius: 6px; border: none; padding: 0.6rem 1rem; font-size: 1rem; }
         .btn-buscar { background-color: white; color: black; border: none; font-weight: bold; padding: 0 20px; border-radius: 0 6px 6px 0; }
 
         .rango-container { background: rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 10px; margin-bottom: 1.5rem; }
 
-        /* TARJETA DE INFO USUARIO BLANCA */
         .info-usuario { background-color: #f8f9fa; color: #333; padding: 15px 20px; border-radius: 8px; margin-bottom: 1.5rem; }
         .info-usuario .nombre-titular { color: var(--color-vino); font-weight: bold; font-size: 1.15rem; }
         .badge-inapam { background-color: #198754; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
         .divisor-rojo { border-right: 1px solid rgba(220, 53, 69, 0.5); }
 
-        /* BOTÓN REGISTRAR PAGO */
         .btn-registrar-pago {
             background-color: white;
             color: var(--color-vino);
@@ -67,7 +62,6 @@
         .btn-registrar-pago:hover:not(:disabled) { background-color: #f0f0f0; transform: scale(1.02); }
         .btn-registrar-pago:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* OPACIDAD PARA ESTADO DESHABILITADO */
         .estado-inactivo { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
@@ -122,7 +116,7 @@
             <button class="btn-registrar-pago" disabled>Registrar Pago</button>
         </div>
 
-        <form th:action="@{/pagos/guardar-final}" method="post" th:if="${cuenta != null}">
+        <form id="formPago" th:action="@{/pagos/guardar-final}" method="post" th:if="${cuenta != null}">
 
             <input type="hidden" name="folio" th:value="${folioBuscado}">
             <input type="hidden" id="hiddenTarifa" th:value="${tarifaBase}">
@@ -204,7 +198,7 @@
                 </div>
             </div>
 
-            <button type="submit" id="btnSubmitCobro" class="btn-registrar-pago">Registrar Pago</button>
+            <button type="button" class="btn-registrar-pago" data-bs-toggle="modal" data-bs-target="#modalConfirmacion" onclick="prepararConfirmacion()">Registrar Pago</button>
         </form>
 
     </div>
@@ -223,7 +217,7 @@
         const tieneInapam = document.getElementById('hiddenInapam').value === 'true';
 
         let meses = ((aFin - aInicio) * 12) + (mFin - mInicio) + 1;
-        const btn = document.getElementById('btnSubmitCobro');
+        const btn = document.querySelector('[data-bs-target="#modalConfirmacion"]');
         const inputVisual = document.getElementById('inputTotalVisual');
 
         if (meses <= 0) {
@@ -242,12 +236,48 @@
         inputVisual.value = total.toFixed(2);
     }
 
+    function prepararConfirmacion() {
+        const selMesInicio = document.getElementById('mesInicio');
+        const selAnioInicio = document.getElementById('anioInicio');
+        const selMesFin = document.getElementById('mesFin');
+        const selAnioFin = document.getElementById('anioFin');
+
+        const mesInicioTexto = selMesInicio.options[selMesInicio.selectedIndex].text;
+        const anioInicioTexto = selAnioInicio.value;
+        const mesFinTexto = selMesFin.options[selMesFin.selectedIndex].text;
+        const anioFinTexto = selAnioFin.value;
+
+        document.getElementById('textoPeriodo').innerText =
+            mesInicioTexto + " " + anioInicioTexto + " al " + mesFinTexto + " " + anioFinTexto;
+    }
+
     document.querySelectorAll('.calcular-trigger').forEach(select => {
         select.addEventListener('change', calcularEnVivo);
     });
 
     window.onload = calcularEnVivo;
 </script>
+
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="modalLabel">Confirmar Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que la información es correcta?</p>
+                <hr>
+                <p><strong>Periodo a pagar:</strong> <span id="textoPeriodo"></span></p>
+                <small class="text-muted">Si no es correcto, cancela y modifica los datos.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="document.getElementById('formPago').submit();">Sí, confirmar pago</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

@@ -9,6 +9,8 @@ import com.SCPAR.proyecto.repository.PagoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class EstadoCuentaService {
 
@@ -60,7 +62,23 @@ public class EstadoCuentaService {
         }
 
         dto.setDescuentoInapamStr(cuenta.getDescuentoInapam() != null && cuenta.getDescuentoInapam() ? "Si" : "No");
-        dto.setUltimaFechaPago(pagoRepo.findUltimaFechaByFolio(folio));
+        // --- NUEVA LÓGICA DE ÚLTIMO PAGO ---
+        // 1. Primero buscamos si ya tiene pagos hechos en el sistema digital
+        LocalDateTime ultimaFechaSistema = pagoRepo.findUltimaFechaByFolio(folio);
+
+        if (ultimaFechaSistema != null) {
+            // Si tiene pagos digitales, usamos esa fecha (es la más reciente)
+            dto.setUltimaFechaPago(ultimaFechaSistema);
+
+        } else if (cuenta.getFechaUltimoPago() != null) {
+            // 2. Si NO tiene pagos digitales, pero SÍ tiene fecha del libro físico, usamos la del libro.
+            // (Usamos .atStartOfDay() para convertir el LocalDate a LocalDateTime, asumiendo que tu DTO usa LocalDateTime)
+            dto.setUltimaFechaPago(cuenta.getFechaUltimoPago().atStartOfDay());
+
+        } else {
+            // 3. Si no tiene ni digital ni en libro, lo dejamos nulo para que diga "Sin registros"
+            dto.setUltimaFechaPago(null);
+        }
 
         return dto;
     }

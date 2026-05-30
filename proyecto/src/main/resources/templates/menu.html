@@ -150,8 +150,8 @@
         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
             <li>
                 <form th:action="@{/administrador/backup/manual}" method="post" style="margin: 0;">
-                    <button type="submit" class="dropdown-item fw-bold" style="color: #198754;">
-                        💾 Respaldar Base de Datos
+                    <button type="submit" class="dropdown-item fw-bold" style="color: #000000;">
+                        Respaldar Base de Datos
                     </button>
                 </form>
             </li>
@@ -175,6 +175,7 @@
             <a th:href="@{/consultar}" class="menu-btn">Estado de cuenta</a>
             <a th:href="@{/usuarios/nuevo}" class="menu-btn">Registrar nuevo Usuario</a>
             <a th:href="@{/configuracion}" class="menu-btn">Configuración de Catálogos</a>
+            <a th:href="@{/usuarios/ultimos-registros}" class="menu-btn">Últimos Registros</a>
         </div>
         <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
             <a th:href="@{/pagos/adeudos/lista}" class="text-decoration-none w-100" style="max-width: 480px;">
@@ -187,14 +188,14 @@
 
                             <div class="text-center">
                                 <div style="font-size: 3rem; font-weight: 800; color: var(--color-vino); line-height: 1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" th:text="${totalUsuarios}">--</div>
-                                <div style="font-size: 0.75rem; color: #6c757d; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 12px;">Usuarios<br>Registrados</div>
+                                <div style="font-size: 0.75rem; color: #000000; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 12px;">Usuarios<br>Registrados</div>
                             </div>
 
                             <div style="width: 2px; height: 70px; background-color: #f0e6e7; border-radius: 1px;"></div>
 
                             <div class="text-center">
                                 <div style="font-size: 3rem; font-weight: 800; color: #dc3545; line-height: 1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" th:text="${adeudosActivos}">--</div>
-                                <div style="font-size: 0.75rem; color: #dc3545; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 12px;">Deudores<br>Activos</div>
+                                <div style="font-size: 0.75rem; color: #000000; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 12px;">Deudores<br>Activos</div>
                             </div>
 
                         </div>
