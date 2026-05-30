@@ -72,6 +72,13 @@ public class UsuarioController {
             return "redirect:/consultar";
         }
 
+        // --- NUEVO CANDADO: Si está suspendida, lo rebotamos ---
+        if (cuenta.getEstatusCuenta() != null && cuenta.getEstatusCuenta() == 0) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Acción denegada: La cuenta está SUSPENDIDA. Reactívala para poder editar su información.");
+            return "redirect:/estado-cuenta/" + folio;
+        }
+
+        // Pasamos los datos al DTO para que el formulario los entienda
         RegistroUsuarioDTO dto = new RegistroUsuarioDTO();
         dto.setFolioTarjeta(cuenta.getFolioTarjeta());
         dto.setNombres(cuenta.getNombres());
