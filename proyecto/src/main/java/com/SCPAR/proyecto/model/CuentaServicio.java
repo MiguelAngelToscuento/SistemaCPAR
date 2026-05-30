@@ -45,6 +45,17 @@ public class CuentaServicio {
     @Column(name = "numero_interior")
     private String numeroInterior;
 
+    @Column(name = "fecha_ultimo_pago") // O el nombre que le hayas puesto en BD
+    private LocalDate fechaUltimoPago;
+
+    public LocalDate getFechaUltimoPago() {
+        return fechaUltimoPago;
+    }
+
+    public void setFechaUltimoPago(LocalDate fechaUltimoPago) {
+        this.fechaUltimoPago = fechaUltimoPago;
+    }
+
     public CuentaServicio() {}
 
     // --- GETTERS Y SETTERS ---

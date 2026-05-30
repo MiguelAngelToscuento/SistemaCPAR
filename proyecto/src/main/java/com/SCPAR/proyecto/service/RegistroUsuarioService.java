@@ -3,11 +3,11 @@ package com.SCPAR.proyecto.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; // <-- NUEVO
+import org.springframework.stereotype.Service;
 
 import com.SCPAR.proyecto.dto.RegistroUsuarioDTO;
 import com.SCPAR.proyecto.model.CatCalle;
-import com.SCPAR.proyecto.model.CatTipoServicio; // <-- NUEVO
+import com.SCPAR.proyecto.model.CatTipoServicio;
 import com.SCPAR.proyecto.model.CuentaServicio;
 import com.SCPAR.proyecto.repository.CatCalleRepository;
 import com.SCPAR.proyecto.repository.CatTipoServicioRepository;
@@ -25,13 +25,12 @@ public class RegistroUsuarioService {
     private CatCalleRepository catCalleRepository;
 
     @Autowired
-    private CatTipoServicioRepository catTipoServicioRepository; // <-- NUEVO
+    private CatTipoServicioRepository catTipoServicioRepository;
 
     public List<CatCalle> obtenerCatCalle() {
         return catCalleRepository.findAll();
     }
 
-    // <-- NUEVO MÉTODO -->
     public List<CatTipoServicio> obtenerCatServicios() {
         return catTipoServicioRepository.findAll();
     }
@@ -57,6 +56,9 @@ public class RegistroUsuarioService {
         nuevaCuenta.setDescuentoInapam(dto.getDescuentoInapam());
         nuevaCuenta.setEstatusCuenta(1);
 
+        // --- GUARDAMOS LA FECHA DEL LIBRO FÍSICO ---
+        nuevaCuenta.setFechaUltimoPago(dto.getFechaUltimoPago());
+
         cuentaServicioRepository.save(nuevaCuenta);
     }
 
@@ -68,7 +70,6 @@ public class RegistroUsuarioService {
         cuentaExistente.setNombres(dto.getNombres());
         cuentaExistente.setApellidoPaterno(dto.getApellidoPaterno());
         cuentaExistente.setApellidoMaterno(dto.getApellidoMaterno());
-        // Si no quieres que cambien la fecha de registro original, puedes quitar la siguiente línea
         cuentaExistente.setFechaRegistro(dto.getFechaRegistro());
 
         CatCalle calleSeleccionada = catCalleRepository.findById(dto.getIdCalle()).orElse(null);
@@ -80,8 +81,15 @@ public class RegistroUsuarioService {
         cuentaExistente.setIdServicio(dto.getIdServicio());
         cuentaExistente.setDescuentoInapam(dto.getDescuentoInapam());
 
-        // Se guarda la actualización
+        // --- ACTUALIZAMOS LA FECHA DEL LIBRO FÍSICO ---
+        cuentaExistente.setFechaUltimoPago(dto.getFechaUltimoPago());
+
         cuentaServicioRepository.save(cuentaExistente);
+    }
+
+    // Agrega este método al final de tu RegistroUsuarioService.java
+    public List<CuentaServicio> obtenerCuentasPorCalle(Integer idCalle) {
+        return cuentaServicioRepository.findByCalleIdCalle(idCalle);
     }
 
 }

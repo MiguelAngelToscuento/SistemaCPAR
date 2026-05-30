@@ -5,27 +5,27 @@ import java.time.LocalDate;
 
 public class RegistroUsuarioDTO {
 
-    // EL CAMPO COMO STRING PARA ACEPTAR LETRAS
     private String folioTarjeta;
 
-    // Datos personales
     private String nombres;
     private String apellidoPaterno;
     private String apellidoMaterno;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaRegistro;
 
-    // Datos de la cuenta
     private Integer idCalle;
-    private String numeroExterior; // <-- Nuevo
-    private String numeroInterior; // <-- Nuevo
+    private String numeroExterior;
+    private String numeroInterior;
     private String codigoPostal;
     private Integer idServicio;
     private Boolean descuentoInapam;
 
+    // --- NUEVO CAMPO PARA EL LIBRO FÍSICO ---
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaUltimoPago;
+
     public RegistroUsuarioDTO() {}
 
-    // --- GETTERS Y SETTERS ---
     public String getFolioTarjeta() { return folioTarjeta; }
     public void setFolioTarjeta(String folioTarjeta) { this.folioTarjeta = folioTarjeta; }
 
@@ -58,4 +58,7 @@ public class RegistroUsuarioDTO {
 
     public Boolean getDescuentoInapam() { return descuentoInapam; }
     public void setDescuentoInapam(Boolean descuentoInapam) { this.descuentoInapam = descuentoInapam; }
+
+    public LocalDate getFechaUltimoPago() { return fechaUltimoPago; }
+    public void setFechaUltimoPago(LocalDate fechaUltimoPago) { this.fechaUltimoPago = fechaUltimoPago; }
 }

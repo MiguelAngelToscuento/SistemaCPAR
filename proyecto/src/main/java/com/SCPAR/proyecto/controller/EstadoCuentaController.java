@@ -1,9 +1,7 @@
 package com.SCPAR.proyecto.controller;
 
-import com.SCPAR.proyecto.dto.EstadoCuentaDTO;
-import com.SCPAR.proyecto.model.Pago;
-import com.SCPAR.proyecto.repository.PagoRepository;
-import com.SCPAR.proyecto.service.EstadoCuentaService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import com.SCPAR.proyecto.dto.EstadoCuentaDTO;
+import com.SCPAR.proyecto.model.Pago;
+import com.SCPAR.proyecto.repository.PagoRepository;
+import com.SCPAR.proyecto.service.EstadoCuentaService;
 
 @Controller
 public class EstadoCuentaController {
@@ -72,9 +74,30 @@ public class EstadoCuentaController {
     public String verHistorial(@PathVariable String folio, Model model) {
         List<Pago> pagos = pagoRepository.findByCuenta_FolioTarjetaOrderByFechaPagoDesc(folio);
 
+        // NUEVO: Obtenemos el estatus actual para que el HTML sepa si encender o apagar el switch
+        Integer estatusActual = estadoCuentaService.obtenerEstatusPorFolio(folio);
+        model.addAttribute("estatusCuenta", estatusActual);
+
         model.addAttribute("pagos", pagos);
         model.addAttribute("folio", folio);
 
         return "historial_pagos";
+    }
+
+    @PostMapping("/usuarios/cambiar-estatus")
+    public String alternarEstatusCliente(@RequestParam String folio,
+            @RequestParam(required = false) String estatusSwitch,
+            RedirectAttributes redirectAttributes) {
+
+        // Si el switch viene marcado en el form, el navegador envía su valor, si no, viene nulo
+        Integer nuevoEstatus = (estatusSwitch != null) ? 1 : 0;
+
+        estadoCuentaService.cambiarEstatusCuenta(folio, nuevoEstatus);
+
+        String msg = (nuevoEstatus == 1) ? "¡La cuenta ha sido Reactivada con éxito!" : "¡La cuenta ha sido Suspendida con éxito!";
+        redirectAttributes.addFlashAttribute("mensajeExito", msg);
+
+        // CORREGIDO: La ruta ahora coincide exactamente con tu @GetMapping
+        return "redirect:/historial/" + folio;
     }
 }
