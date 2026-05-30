@@ -77,3 +77,4 @@ INSERT INTO cat_tipo_servicios (nombre_servicio, tarifa) VALUES
                                                              ('Hogar', 60.00),
                                                              ('Fraccionamiento', 80.00),
                                                              ('Tubo general', 120.00);
+ALTER TABLE cuentas_servicio ADD COLUMN fecha_ultimo_pago DATE NULL;
