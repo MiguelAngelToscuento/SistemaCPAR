@@ -4,14 +4,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.SCPAR.proyecto.model.Administrador;
@@ -49,7 +53,7 @@ public class PagoController {
     }
 
     @PostMapping("/buscar-cuenta")
-    public String buscarCuentaPorFolio(@RequestParam("folio") String folio, Model model) { // Cambiado a String
+    public String buscarCuentaPorFolio(@RequestParam("folio") String folio, Model model) {
         CuentaServicio cuenta = cuentaRepository.findById(folio).orElse(null);
 
         if (cuenta == null) {
@@ -58,6 +62,12 @@ public class PagoController {
             return "pago-busqueda";
         }
 
+        // --- NUEVO CANDADO: Evitar pagos si está suspendida ---
+        if (cuenta.getEstatusCuenta() != null && cuenta.getEstatusCuenta() == 0) {
+            model.addAttribute("error", "La cuenta con folio " + folio + " está SUSPENDIDA. No se pueden procesar cobros.");
+            model.addAttribute("cuenta", null);
+            return "pago-busqueda";
+        }
         CatTipoServicio servicio = catTipoServicioRepository.findById(cuenta.getIdServicio()).orElse(null);
         String nombreServicio = (servicio != null) ? servicio.getNombreServicio() : "Desconocido";
         BigDecimal tarifa = (servicio != null) ? servicio.getTarifa() : BigDecimal.ZERO;
@@ -92,6 +102,13 @@ public class PagoController {
 
         try {
             CuentaServicio cuenta = cuentaRepository.findById(folio).orElseThrow();
+
+            // --- CANDADO BACKEND ANTES DE COBRAR ---
+            if (cuenta.getEstatusCuenta() != null && cuenta.getEstatusCuenta() == 0) {
+                redirectAttributes.addFlashAttribute("error", "Operación denegada: La cuenta está suspendida.");
+                return "redirect:/pagos/realizar";
+            }
+
             CatTipoServicio servicio = catTipoServicioRepository.findById(cuenta.getIdServicio()).orElseThrow();
             BigDecimal tarifaBase = servicio.getTarifa();
 
@@ -139,6 +156,7 @@ public class PagoController {
             return "redirect:/pagos/realizar";
         }
     }
+
     // 4. MOSTRAR EL RECIBO DE PAGO
     @GetMapping("/recibo/{idPago}")
     public String mostrarRecibo(@PathVariable Integer idPago, Model model, RedirectAttributes redirectAttributes) {
@@ -165,11 +183,11 @@ public class PagoController {
     public String verListaDeudores(Model model) {
         // Jalamos la lista de la base de datos usando el repositorio
         List<Map<String, Object>> deudores = pagoRepository.findCuentasConAdeudo();
-        
+
         // Se la pasamos a la nueva vista de Thymeleaf
         model.addAttribute("listaDeudores", deudores);
-        
+
         // Buscamos el archivo llamado lista_adeudos.html en la carpeta templates
-        return "lista_adeudos"; 
+        return "lista_adeudos";
     }
 }

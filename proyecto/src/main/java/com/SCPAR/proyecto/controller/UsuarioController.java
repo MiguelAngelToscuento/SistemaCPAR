@@ -80,6 +80,12 @@ public class UsuarioController {
             return "redirect:/consultar";
         }
 
+        // --- NUEVO CANDADO: Si está suspendida, lo rebotamos ---
+        if (cuenta.getEstatusCuenta() != null && cuenta.getEstatusCuenta() == 0) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Acción denegada: La cuenta está SUSPENDIDA. Reactívala para poder editar su información.");
+            return "redirect:/estado-cuenta/" + folio;
+        }
+
         // Pasamos los datos al DTO para que el formulario los entienda
         RegistroUsuarioDTO dto = new RegistroUsuarioDTO();
         dto.setFolioTarjeta(cuenta.getFolioTarjeta());
@@ -106,10 +112,18 @@ public class UsuarioController {
     @PostMapping("/actualizar")
     public String actualizarUsuario(@ModelAttribute("registroDTO") RegistroUsuarioDTO registroDTO, RedirectAttributes redirectAttributes) {
         try {
+            // --- NUEVO CANDADO BACKEND ---
+            com.SCPAR.proyecto.model.CuentaServicio cuentaBD = cuentaRepository.findById(registroDTO.getFolioTarjeta()).orElse(null);
+            if (cuentaBD != null && cuentaBD.getEstatusCuenta() != null && cuentaBD.getEstatusCuenta() == 0) {
+                redirectAttributes.addFlashAttribute("mensajeError", "No se pueden guardar cambios porque la cuenta está SUSPENDIDA.");
+                return "redirect:/estado-cuenta/" + registroDTO.getFolioTarjeta();
+            }
+
+            // --- GUARDADO NORMAL ---
             registroUsuarioService.actualizarUsuario(registroDTO);
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Los datos del cliente se actualizaron correctamente!");
-            // Redirigimos de vuelta al estado de cuenta de ese usuario
             return "redirect:/estado-cuenta/" + registroDTO.getFolioTarjeta();
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "Error al actualizar: " + e.getMessage());
             return "redirect:/usuarios/editar/" + registroDTO.getFolioTarjeta();
