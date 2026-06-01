@@ -22,37 +22,37 @@ public class BackupService {
     private final String password = "7585ToManf";
     private final String baseDatos = "sistema_agua_texcalac";
 
-    // 1. EL RESPALDO AUTOMÁTICO (Cada quincena a las 2 AM)
-    @Scheduled(cron = "0 0 2 */15 * *")
+    // 1. EL RESPALDO AUTOMÁTICO (Días 1 y 15 de cada mes a las 2 AM)
+    @Scheduled(cron = "0 0 2 1,15 * *")
     public void crearRespaldoAutomatico() {
         ejecutarProcesoRespaldo("respaldo_sistema_agua_");
     }
 
-    // 2. EL RESPALDO MANUAL (El que llama el botón de tu Menú)
+    // 2. EL RESPALDO MANUAL
     public boolean ejecutarRespaldoManual() {
         return ejecutarProcesoRespaldo("respaldo_MANUAL_");
     }
 
-    // 3. EL MOTOR PRINCIPAL (Hace el trabajo para ambos)
+    // 3. EL MOTOR PRINCIPAL
     private boolean ejecutarProcesoRespaldo(String prefijoArchivo) {
 
-        // Detección automática del sistema operativo para las rutas
         String os = System.getProperty("os.name").toLowerCase();
         String rutaCarpetaFinal = rutaCarpeta;
         String rutaDumpFinal = rutaMysqlDump;
 
-        // Si las propiedades están vacías, usamos las rutas por defecto según el SO
         if (rutaCarpetaFinal == null || rutaCarpetaFinal.isEmpty()) {
             if (os.contains("win")) {
                 rutaCarpetaFinal = "C:/Respaldos_Texcalac/";
                 rutaDumpFinal = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe";
             } else {
+                // RUTA ABSOLUTA PARA DEBIAN/LINUX
                 rutaCarpetaFinal = "/opt/respaldos_texcalac/";
-                rutaDumpFinal = "mysqldump"; // Comando global en CachyOS/Linux
+                rutaDumpFinal = "/usr/bin/mysqldump";
             }
         }
 
         File carpeta = new File(rutaCarpetaFinal);
+        // Intentar crear la carpeta (si en Linux no hay permisos, esto fallará silenciosamente y luego reventará al escribir)
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
@@ -68,7 +68,6 @@ public class BackupService {
             if (password.isEmpty()) {
                 pb = new ProcessBuilder(rutaDumpFinal, "-u", usuario, baseDatos);
             } else {
-                // El parámetro -p va pegado a la contraseña en mysqldump
                 pb = new ProcessBuilder(rutaDumpFinal, "-u", usuario, "-p" + password, baseDatos);
             }
 
