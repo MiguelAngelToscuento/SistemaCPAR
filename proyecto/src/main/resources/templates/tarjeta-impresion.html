@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Impresión de Tarjeta - Texcalac</title>
+    <style>
+        /* Variables y ajustes generales */
+        :root {
+            --color-rojo: #a82e3e;
+            --color-gris-claro: #cccccc;
+            --color-gris-oscuro: #555555;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0; /* Fondo gris para la pantalla */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- CONFIGURACIÓN DE LA TARJETA (MEDIDAS REALES) --- */
+        .tarjeta-container {
+            width: 21.7cm;
+            height: 14.3cm;
+            background-color: white;
+            padding: 1cm;
+            box-sizing: border-box;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* --- CONTROLES DE PANTALLA (No se imprimen) --- */
+        .controles-impresion {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-imprimir { background-color: #4a0d16; }
+        .btn-imprimir:hover { background-color: #63121d; } /* Le agregamos un efecto al pasar el mouse */
+        .btn-volver { background-color: #6c757d; }
+
+        /* --- DISEÑO INTERNO DE LA TARJETA --- */
+        /* --- DISEÑO INTERNO DE LA TARJETA (2 COLUMNAS) --- */
+        .tarjeta-top {
+            display: flex;
+            align-items: center; /* Centra el logo verticalmente con los textos */
+            gap: 25px; /* Separación entre el logo y los textos */
+            margin-bottom: 20px;
+        }
+
+        .logo-seccion {
+            flex: 0 0 25%; /* El logo toma el 25% del ancho de la tarjeta */
+            text-align: center;
+        }
+        .logo-seccion img {
+            width: 100%; /* Hace que el logo ocupe todo su espacio */
+            max-width: 140px; /* Límite para que se vea grande pero sin deformarse */
+            height: auto;
+        }
+
+        .info-seccion {
+            flex: 1; /* Los textos toman el 75% restante */
+            position: relative;
+        }
+
+        .titulos-seccion {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-right: 120px; /* Deja un hueco a la derecha para que el folio no estorbe */
+        }
+        .titulos-seccion h2 {
+            color: var(--color-rojo);
+            font-size: 16px;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+        }
+
+        .folio-caja {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #ffcccc;
+            color: var(--color-rojo);
+            padding: 5px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+        }
+
+        .datos-usuario {
+            font-size: 13px;
+            color: var(--color-rojo);
+            line-height: 1.6;
+            text-align: left; /* Alinea los datos a la izquierda, pegaditos al logo */
+        }
+        .datos-usuario span {
+            color: black;
+            font-weight: bold;
+        }
+
+
+        .subtitulo-meses {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            font-style: italic;
+            margin: 10px 0;
+            color: var(--color-gris-oscuro);
+        }
+
+        /* --- TABLA DE PAGOS --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            font-size: 15px;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px 2px;
+            width: 7.14%; /* 14 columnas equitativas */
+        }
+        th {
+            border: none;
+            color: var(--color-gris-oscuro);
+            font-weight: bold;
+            padding-bottom: 5px;
+        }
+        .columna-obs {
+            width: 12%; /* Un poco más ancha para observaciones */
+        }
+        .fila-gris {
+            background-color: var(--color-gris-claro);
+        }
+
+        /* --- MAGIA DE IMPRESIÓN --- */
+        @media print {
+            @page {
+                margin: 0.5cm; /* Margen pequeño para que no corte texto */
+            }
+            body {
+                background-color: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                /* ESTO ES LA CLAVE: Desactiva el centrado vertical de la pantalla */
+                display: block !important;
+            }
+            .controles-impresion {
+                display: none !important;
+            }
+            .tarjeta-container {
+                box-shadow: none !important;
+                /* margin: 0 auto; lo centra de izquierda a derecha, pero lo deja pegado ARRIBA (0) */
+                margin: 0 auto !important;
+            }
+            /* FORZAR COLORES EN TODOS LOS ELEMENTOS */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="tarjeta-container">
+
+    <div class="tarjeta-top">
+
+        <div class="logo-seccion">
+            <img th:src="@{/LOGO.png}" alt="Logo Texcalac">
+        </div>
+
+        <div class="info-seccion">
+
+            <div class="titulos-seccion">
+                <h2>COMISIÓN DE AGUA POTABLE Y ALCANTARILLADO DE COMUNIDAD</h2>
+                <h2>SANTA MARÍA TEXCALAC, APIZACO</h2>
+
+
+            </div>
+            <div class="folio-caja" th:text="${cuenta.folioTarjeta}">
+
+            </div>
+            <div class="datos-usuario">
+
+                <div>NOMBRE: <span th:text="${cuenta.nombres + ' ' + cuenta.apellidoPaterno + ' ' + (cuenta.apellidoMaterno != null ? cuenta.apellidoMaterno : '')}"></span></div>
+                <div>
+                    DOMICILIO:
+                    <span>
+                            <span th:text="${cuenta.calle != null ? cuenta.calle.nombreCalle : ''}"></span>,
+                            N.º <span th:text="${cuenta.numeroExterior}"></span>
+                            <span th:if="${cuenta.numeroInterior != null and cuenta.numeroInterior != ''}" th:text="' Int. ' + cuenta.numeroInterior"></span>,
+                            SANTA MARIA TEXCALAC, APIZACO, TLAX. C.P <span th:text="${cuenta.codigoPostal}"></span>.
+                        </span>
+                </div>
+                <div>
+                    TARIFA:
+                    <span th:each="servicio : ${listaServicios}"
+                          th:if="${servicio.idServicio == cuenta.idServicio}"
+                          th:text="'$' + ${#numbers.formatDecimal(servicio.tarifa, 1, 2, 'POINT')}"
+                          style="font-weight: bold; color: black;">
+                        </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="subtitulo-meses">MESES PAGADOS</div>
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>ENE</th>
+            <th>FEB</th>
+            <th>MAR</th>
+            <th>ABR</th>
+            <th>MAY</th>
+            <th>JUN</th>
+            <th>JUL</th>
+            <th>AGO</th>
+            <th>SEP</th>
+            <th>OCT</th>
+            <th>NOV</th>
+            <th>DIC</th>
+            <th class="columna-obs">OBS</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="anio, iterStat : ${anios}" th:class="${iterStat.odd} ? 'fila-gris' : ''">
+            <td style="font-weight: bold; border-left: none;" th:text="${anio}">2026</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td style="border-right: none;"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<br>
+<div class="controles-impresion">
+    <a th:href="@{/administrador/menu}" class="btn btn-volver">← Volver al Menú</a>
+    <button onclick="window.print()" class="btn btn-imprimir">Imprimir Tarjeta</button>
+</div>
+
+</body>
+</html>

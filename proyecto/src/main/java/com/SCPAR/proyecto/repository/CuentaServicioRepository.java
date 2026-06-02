@@ -7,5 +7,5 @@ import java.util.List;
 
 // Cambiado de Integer a String
 public interface CuentaServicioRepository extends JpaRepository<CuentaServicio, String> {
-    List<CuentaServicio> findByCalleIdCalle(Integer idCalle);
+    List<CuentaServicio> findByCalleIdCalleOrderByFechaRegistroDesc(Integer idCalle);
 }

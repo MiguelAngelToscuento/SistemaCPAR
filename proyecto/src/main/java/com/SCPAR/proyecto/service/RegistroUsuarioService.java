@@ -89,7 +89,7 @@ public class RegistroUsuarioService {
 
     // Agrega este método al final de tu RegistroUsuarioService.java
     public List<CuentaServicio> obtenerCuentasPorCalle(Integer idCalle) {
-        return cuentaServicioRepository.findByCalleIdCalle(idCalle);
+        return cuentaServicioRepository.findByCalleIdCalleOrderByFechaRegistroDesc(idCalle);
     }
 
 }
