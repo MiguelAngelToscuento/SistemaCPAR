@@ -68,6 +68,14 @@
         <a th:href="@{/historial/{folio}(folio=${cuenta.folioTarjeta})}" class="btn-blanco w-50 shadow-sm text-center" style="text-decoration:none; line-height: 1.5;">Historial de Pagos</a>
         <a href="/consultar" class="btn btn-outline-light w-50 fw-bold d-flex align-items-center justify-content-center">Nueva Búsqueda</a>
     </div>
+       <div class="mt-3 w-100">
+           <a th:href="@{/usuarios/imprimir-tarjeta/{folio}(folio=${cuenta.folioTarjeta})}"
+              class="btn btn-outline-light w-100 fw-bold d-flex align-items-center justify-content-center"
+              style="padding: 10px; transition: 0.2s;"
+              target="_blank">
+               Imprimir / Renovar Tarjeta Física
+           </a>
+       </div>
 </div>
     </div> </main>
 

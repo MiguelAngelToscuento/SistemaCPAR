@@ -53,7 +53,8 @@ public class UsuarioController {
             try {
                 registroUsuarioService.registrarUsuario(registroDTO);
                 redirectAttributes.addFlashAttribute("mensajeExito", "¡El usuario se registró correctamente en el sistema!");
-                return "redirect:/administrador/menu";
+                // Redirige a la pantalla de impresión después de guardar
+                return "redirect:/usuarios/imprimir-tarjeta/" + registroDTO.getFolioTarjeta();
 
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("mensajeError", "Error al guardar en la Base de Datos: " + e.getMessage());
@@ -127,5 +128,31 @@ public class UsuarioController {
         }
 
         return "ultimos-registros";
+    }
+    @GetMapping("/imprimir-tarjeta/{folio}")
+    public String imprimirTarjetaFisica(@PathVariable String folio, Model model, RedirectAttributes redirectAttributes) {
+        com.SCPAR.proyecto.model.CuentaServicio cuenta = cuentaRepository.findById(folio).orElse(null);
+
+        if (cuenta == null) {
+            redirectAttributes.addFlashAttribute("mensajeError", "El usuario no existe para imprimir tarjeta.");
+            return "redirect:/consultar";
+        }
+
+        // Calculamos el inicio del "libro" actual (ciclo de 7 años empezando siempre en 2024)
+        int anioActual = java.time.LocalDate.now().getYear();
+        int anioInicioLibro = 2024 + ((anioActual - 2024) / 7) * 7;
+
+        java.util.List<Integer> aniosLista = new java.util.ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            aniosLista.add(anioInicioLibro + i);
+        }
+
+        model.addAttribute("cuenta", cuenta);
+        model.addAttribute("anios", aniosLista);
+
+        // --- AGREGA ESTA LÍNEA ---
+        model.addAttribute("listaServicios", registroUsuarioService.obtenerCatServicios());
+
+        return "tarjeta-impresion";
     }
 }
