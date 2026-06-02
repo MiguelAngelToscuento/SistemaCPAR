@@ -79,7 +79,8 @@ public class PagoController {
 
         int anioActual = LocalDate.now().getYear();
         List<Integer> listaAnios = new ArrayList<>();
-        for (int i = anioActual - 2; i <= anioActual + 5; i++) {
+        // Cambiamos a - 10 para ver 10 años en el pasado
+        for (int i = anioActual - 20; i <= anioActual + 20; i++) {
             listaAnios.add(i);
         }
         model.addAttribute("listaAnios", listaAnios);
